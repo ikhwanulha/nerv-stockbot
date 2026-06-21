@@ -2,7 +2,7 @@
 // TYPES untuk NERV StockBot
 // ============================================================
 
-import { User as PrismaUser } from "@prisma/client";
+
 
 // Extend NextAuth session type
 declare module "next-auth" {
@@ -18,12 +18,6 @@ declare module "next-auth" {
     id: string;
     email: string;
     name?: string | null;
-  }
-}
-
-declare module "next-auth/jwt" {
-  interface JWT {
-    id: string;
   }
 }
 
