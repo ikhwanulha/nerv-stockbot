@@ -15,6 +15,8 @@ import {
   TVAdvancedChart, TVSymbolInfo, TVMarketOverview,
   TVTechnicalAnalysis, TVFundamentalData, TVTickerTape
 } from "@/components/TradingViewWidgets";
+import TickerAutocomplete from "@/components/TickerAutocomplete";
+import { DashboardSkeleton } from "@/components/SkeletonLoaders";
 import { BarChart3, TrendingUp, BookmarkCheck, Brain, Search, TrendingDown, Signal as SignalIcon, RefreshCw } from "lucide-react";
 
 // ============================================================
@@ -205,11 +207,7 @@ function DashboardContent() {
   useEffect(() => { if (status === "unauthenticated") router.push("/login"); }, [status]);
 
   if (status === "loading" || !mounted) {
-    return (
-      <div className="min-h-screen bg-surface flex items-center justify-center">
-        <div className="w-10 h-10 border-2 border-primary-500 border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   if (status === "unauthenticated") return null;
@@ -226,18 +224,17 @@ function DashboardContent() {
       <div className="flex">
         <Sidebar />
         <main className="flex-1 p-3 lg:p-4 overflow-x-hidden">
-          {/* Symbol selector */}
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <div className="flex bg-surface-100 border border-surface-300 rounded-lg overflow-hidden">
-                <input type="text" value={inputSymbol} onChange={e => setInputSymbol(e.target.value.toUpperCase())}
-                  onKeyDown={e => e.key === "Enter" && updateChartSymbol()}
-                  placeholder="BBCA" className="w-20 lg:w-28 px-2 py-1.5 text-xs bg-transparent text-text-primary outline-none" />
-                <button onClick={updateChartSymbol} className="px-2 py-1.5 bg-primary-600 hover:bg-primary-700 text-white text-[10px] font-medium transition-colors">
-                  Cari
-                </button>
+          {/* Symbol selector dengan autocomplete */}
+          <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
+            <div className="flex items-center gap-2 flex-1 min-w-0">
+              <div className="w-40 lg:w-56">
+                <TickerAutocomplete
+                  onSelect={(symbol) => setChartSymbol(symbol)}
+                  placeholder="Cari saham (BBCA, AAPL, BTC)..."
+                  autoFocus
+                />
               </div>
-              <span className="text-[10px] text-text-muted">IDX:BBCA, NASDAQ:AAPL, BITSTAMP:BTCUSD</span>
+              <span className="text-[10px] text-text-muted hidden sm:inline">IDX:BBCA, NASDAQ:AAPL, BITSTAMP:BTCUSD</span>
             </div>
             <div className="flex items-center gap-2">
               <button onClick={() => setActiveTab("chart")}

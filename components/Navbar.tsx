@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
+import TickerAutocomplete from "./TickerAutocomplete";
+import NotificationBell from "./NotificationBell";
 import { useTheme } from "@/providers/ThemeProvider";
 import {
   Menu,
@@ -22,21 +24,12 @@ export default function Navbar() {
   const { data: session } = useSession();
   const { sidebarOpen, setSidebarOpen } = useTheme();
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-
   const navLinks = [
     { href: "/dashboard", label: "Dashboard" },
     { href: "/screener", label: "Screener" },
     { href: "/signals", label: "Signals" },
     { href: "/news", label: "News" },
   ];
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      window.location.href = `/dashboard?s=${searchQuery.trim().toUpperCase()}`;
-    }
-  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-surface-200 bg-surface/95 backdrop-blur supports-[backdrop-filter]:bg-surface/80">
@@ -93,7 +86,9 @@ export default function Navbar() {
         </form>
 
         {/* Right actions */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
+          {/* NotificationBell */}
+          <NotificationBell />
           {/* Quick links */}
           <Link
             href="/watchlist"
