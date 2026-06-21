@@ -124,7 +124,7 @@ export default function AIAnalyst({ floating = false }: Props) {
         {
           role: "assistant",
           content:
-            "Maaf, fitur AI Analyst sedang dalam pengembangan. Silakan coba lagi nanti atau gunakan fitur analisis lainnya di dashboard.\n\nAnda masih bisa menggunakan:\n• 📊 **Chart interaktif** dengan TradingView\n• 📈 **Stock Screener** untuk filter saham\n• 🔍 **Signal Detector** untuk sinyal trading\n• 📰 **Insights & News** untuk berita pasar\n\nFitur chat akan segera hadir dengan kemampuan penuh!","]))
+            "Maaf, fitur AI Analyst sedang dalam pengembangan. Silakan coba lagi nanti atau gunakan fitur analisis lainnya di dashboard.\n\nAnda masih bisa menggunakan:\n• 📊 **Chart interaktif** dengan TradingView\n• 📈 **Stock Screener** untuk filter saham\n• 🔍 **Signal Detector** untuk sinyal trading\n• 📰 **Insights & News** untuk berita pasar\n\nFitur chat akan segera hadir dengan kemampuan penuh!",
         },
       ]);
     } finally {
