@@ -1,7 +1,10 @@
 // API Layer untuk mengambil data saham dari Yahoo Finance
 // Menggunakan yahoo-finance2 - gratis dan tanpa API key
 
-import yahooFinance from "yahoo-finance2";
+import YahooFinance from "yahoo-finance2";
+
+// Inisialisasi instance yahoo-finance
+const yahooFinance = new YahooFinance();
 
 // Peta kode saham Indonesia ke Yahoo Finance symbol
 // Yahoo Finance menggunakan akhiran .JK untuk bursa Indonesia
