@@ -69,21 +69,15 @@ export default function Navbar() {
         {/* Spacer */}
         <div className="flex-1" />
 
-        {/* Search */}
-        <form onSubmit={handleSearch} className="hidden sm:flex items-center">
-          <div className="relative">
-            <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value.toUpperCase())}
-              placeholder="Cari saham (BBCA)..."
-              className="w-40 lg:w-56 pl-8 pr-3 py-1.5 text-sm rounded-lg bg-surface-200 border border-surface-300 
-                         text-text-primary placeholder:text-text-muted focus:outline-none focus:border-primary-500/50
-                         transition-colors"
-            />
-          </div>
-        </form>
+        {/* Search dengan Autocomplete */}
+        <div className="hidden sm:block w-44 lg:w-60">
+          <TickerAutocomplete
+            onSelect={(symbol) => {
+              window.location.href = `/dashboard?s=${encodeURIComponent(symbol)}`;
+            }}
+            placeholder="Cari saham (BBCA, AAPL, BTC)..."
+          />
+        </div>
 
         {/* Right actions */}
         <div className="flex items-center gap-1">
