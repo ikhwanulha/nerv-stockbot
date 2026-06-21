@@ -11,6 +11,7 @@ import StockChart from "@/components/StockChart";
 import AIAnalyst from "@/components/AIAnalyst";
 import StockDetailModal from "@/components/StockDetailModal";
 import NewsCard from "@/components/NewsCard";
+import { TVMarketOverview, TVSymbolChart, TVHeatmap } from "@/components/TradingViewWidgets";
 import type { StockQuote, IndexData, NewsItem } from "@/types";
 import { formatNumber, formatPercent, formatCurrency, formatVolume, getChangeColor, getChangeIcon } from "@/lib/utils";
 import {
@@ -28,37 +29,10 @@ interface WidgetProps {
 }
 
 function MarketOverviewWidget({ onExpand }: WidgetProps) {
-  const [indices, setIndices] = useState<Record<string, IndexData> | null>(null);
-
-  useEffect(() => {
-    fetch("/api/stocks?action=indices")
-      .then((r) => r.json())
-      .then(setIndices)
-      .catch(() => {});
-  }, []);
-
-  const items = indices
-    ? [indices.ihsg, indices.lq45, indices.idx30]
-    : [{ symbol: "^JKSE", name: "IHSG", price: 7200, change: 30, changePercent: 0.42 }, { symbol: "LQ45", name: "LQ45", price: 950, change: 5, changePercent: 0.53 }, { symbol: "IDX30", name: "IDX30", price: 500, change: -2, changePercent: -0.4 }];
-
   return (
-    <WidgetCard title="Market Overview" icon={BarChart3} onExpand={onExpand}>
-      <div className="space-y-2">
-        {items.map((item) => (
-          <div key={item.symbol} className="flex items-center justify-between p-2 rounded-lg bg-surface-50/50">
-            <div>
-              <p className="text-sm font-semibold text-text-primary">{item.name}</p>
-              <p className="text-[10px] text-text-muted">{item.symbol}</p>
-            </div>
-            <div className="text-right">
-              <p className="text-sm font-bold font-mono text-text-primary">{formatNumber(item.price)}</p>
-              <p className={`text-xs font-mono ${getChangeColor(item.change)}`}>
-                {getChangeIcon(item.change)} {formatNumber(item.change)} ({formatPercent(item.changePercent)})
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
+    <WidgetCard title="Market Overview (TradingView)" icon={BarChart3} onExpand={onExpand}>
+      <TVMarketOverview height={350} />
+      <p className="text-[10px] text-text-muted mt-1 italic">Data real-time dari TradingView</p>
     </WidgetCard>
   );
 }
@@ -253,20 +227,22 @@ function NetForeignWidget() {
 function ChartWidget({ symbol, onExpand }: { symbol: string } & WidgetProps) {
   const [sym, setSym] = useState(symbol || "BBCA");
   return (
-    <WidgetCard title={`Chart: ${sym}`} icon={BarChart3} onExpand={onExpand}>
-      <div className="mb-2">
+    <WidgetCard title={`Chart: ${sym} (TradingView)`} icon={BarChart3} onExpand={onExpand}>
+      <div className="mb-2 flex gap-2">
         <input
           type="text"
           value={sym}
           onChange={(e) => setSym(e.target.value.toUpperCase())}
           className="w-24 px-2 py-1 text-xs rounded bg-surface-100 border border-surface-300 text-text-primary focus:outline-none focus:border-primary-500"
-          placeholder="BBCA"
+          placeholder="IDX:BBCA"
           onKeyDown={(e) => e.key === "Enter" && setSym(sym)}
         />
+        <span className="text-[10px] text-text-muted self-center">Gunakan format IDX:SYMBOL</span>
       </div>
-      <div className="h-[200px]">
-        <StockChart symbol={sym} />
+      <div className="h-[350px]">
+        <TVSymbolChart symbol={`IDX:${sym.replace("IDX:", "")}`} height={350} />
       </div>
+      <p className="text-[10px] text-text-muted mt-1 italic">Data real-time dari TradingView</p>
     </WidgetCard>
   );
 }
