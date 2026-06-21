@@ -6,11 +6,88 @@ import Sidebar from "@/components/Sidebar";
 import TickerTape from "@/components/TickerTape";
 import { TVAdvancedChart, TVMarketOverview, TVTechnicalAnalysis } from "@/components/TradingViewWidgets";
 import { formatNumber, formatPercent, cn } from "@/lib/utils";
-import { TrendingUp, TrendingDown, Minus, BarChart3, Activity, ChevronDown, ChevronUp, Shield, Target, AlertTriangle, Brain, Clock, Layers } from "lucide-react";
+import { TrendingUp, TrendingDown, BarChart3, Activity, ChevronDown, ChevronUp, Shield, Target, AlertTriangle, Brain, Clock, Layers, CheckCircle, XCircle } from "lucide-react";
 
 // ============================================================
-// DATA SINYAL TEKNIKAL
+// DETAILED SIGNAL DATA - Alasan Sinyal Lengkap
 // ============================================================
+
+const WYCKOFF_DATA = {
+  status: true,
+  lines: [
+    { icon: "📊", text: "Volume spike 2.3x rata-rata pada support 6,180", ok: true },
+    { icon: "🛡️", text: "Harga bertahan di atas support setelah pengujian (successful test)", ok: true },
+    { icon: "📈", text: "Fase: Akumulasi (accumulation) mulai terkonfirmasi", ok: true },
+    { icon: "📋", text: "Volume 15.2M vs Avg 6.6M | Close 6,245 > Support 6,180", ok: true },
+  ],
+};
+
+const GANN_DATA = {
+  status: true,
+  lines: [
+    { icon: "📉", text: "Swing Low terbentuk di 6,110 (4 hari lalu)", ok: true },
+    { icon: "📈", text: "3 hari berturut-turut naik: +1.2%, +0.8%, +1.5%", ok: true },
+    { icon: "✅", text: "Konfirmasi Daily bullish, 4H bullish", ok: true },
+    { icon: "📋", text: "Swing Low: 6,110 | Close 6,245 | 3-day return: +3.5%", ok: true },
+  ],
+};
+
+const MACD_DATA = {
+  status: true,
+  lines: [
+    { icon: "⚡", text: "Garis MACD menyilang ke atas signal line (bullish crossover)", ok: true },
+    { icon: "📊", text: "Histogram mulai membesar (momentum meningkat)", ok: true },
+    { icon: "📋", text: "MACD: 12.5 | Signal: 8.3 | Histogram: +4.2", ok: true },
+  ],
+};
+
+const RSI_DATA = {
+  status: true,
+  lines: [
+    { icon: "📊", text: "RSI 54.8 (naik dari 42.3)", ok: true },
+    { icon: "🟢", text: "Belum overbought (di bawah 70)", ok: true },
+    { icon: "📈", text: "Divergence bullish: Harga turun tapi RSI naik", ok: true },
+  ],
+};
+
+const VOLUME_DATA = {
+  status: true,
+  lines: [
+    { icon: "🔥", text: "Volume meningkat 142% dari rata-rata 20 hari", ok: true },
+    { icon: "📊", text: "On-balance volume (OBV) naik 3.2% hari ini", ok: true },
+    { icon: "📋", text: "Volume 15.2M | Avg 6.6M | OBV Trend: Up", ok: true },
+  ],
+};
+
+const SR_DATA = {
+  status: true,
+  lines: [
+    { icon: "🛡️", text: "Support kuat: 6,180 (konfirmasi 3x test)", ok: true },
+    { icon: "🎯", text: "Resistance terdekat: 6,450 (swing high sebelumnya)", ok: true },
+    { icon: "✅", text: "Jarak ke TP1 masih aman", ok: true },
+    { icon: "📋", text: "S: 6,180 | R1: 6,450 | R2: 6,600", ok: true },
+  ],
+};
+
+const TIMEFRAME_DATA = {
+  status: true,
+  lines: [
+    { icon: "📈", text: "Daily: BULLISH (di atas MA20, MA50)", ok: true },
+    { icon: "📈", text: "4-Hour: BULLISH (breakout dari resistance)", ok: true },
+    { icon: "📈", text: "1-Hour: BULLISH (trend up, MACD positif)", ok: true },
+    { icon: "✅", text: "Konfirmasi: 3/3 timeframe bullish", ok: true },
+  ],
+};
+
+const SIGNAL_REASONS = [
+  { id: "wyckoff", label: "WYCKOFF METHOD", data: WYCKOFF_DATA },
+  { id: "gann", label: "GANN SWING", data: GANN_DATA },
+  { id: "macd", label: "MACD", data: MACD_DATA },
+  { id: "rsi", label: "RSI", data: RSI_DATA },
+  { id: "volume", label: "VOLUME", data: VOLUME_DATA },
+  { id: "sr", label: "SUPPORT & RESISTANCE", data: SR_DATA },
+  { id: "timeframe", label: "TIMEFRAME CONFLUENCE", data: TIMEFRAME_DATA },
+];
 
 const SIGNALS = {
   ihsg: {
@@ -21,10 +98,7 @@ const SIGNALS = {
       tp1: 6420, tp1Percent: 3.2,
       tp2: 6600, tp2Percent: 6.1,
       rr: "1:2.6",
-      wyckoff: "Phase C (Spring) terkonfirmasi. Volume meningkat saat harga menguji support 6.150 dan memantul. Accumulation terdeteksi.",
-      gann: "Gann Square of 9 menunjukkan support di 6.120. Cycle time 45 hari dari swing low terakhir. Resistance di 6.420.",
-      pair: "BBRI/BBCA rasio mendekati support historis. Posisi long BBCA vs short BBRI disarankan.",
-      risk: "Jika IHSG turun di bawah 6.120, tren berbalik bearish. Target berikutnya 6.000.",
+      reasons: SIGNAL_REASONS,
     },
     h4: {
       signal: "BUY", confidence: 65, price: 6240,
@@ -33,10 +107,7 @@ const SIGNALS = {
       tp1: 6350, tp1Percent: 1.8,
       tp2: 6450, tp2Percent: 3.4,
       rr: "1:2.0",
-      wyckoff: "UTAD (Upthrust After Distribution) terbentuk. Waspada potensi reversal.",
-      gann: "Gann Fan 1x1 support di 6.150. Break di atas 6.300 konfirmasi uptrend.",
-      pair: null,
-      risk: "Volume menurun. Konfirmasi diperlukan untuk entry.",
+      reasons: SIGNAL_REASONS.map(r => ({ ...r, data: { ...r.data, status: r.id !== "timeframe" } })),
     },
     h1: {
       signal: "NEUTRAL", confidence: 45, price: 6238,
@@ -45,10 +116,7 @@ const SIGNALS = {
       tp1: 6280, tp1Percent: 0.7,
       tp2: 0, tp2Percent: 0,
       rr: "1:1.1",
-      wyckoff: "Range-bound. Tidak ada sinyal clear. Tunggu breakout di atas 6.280 atau breakdown di bawah 6.190.",
-      gann: "Gann angle 2x1 resistance di 6.280. Sideways konsolidasi.",
-      pair: null,
-      risk: "Range sempit. Tunggu konfirmasi breakout.",
+      reasons: SIGNAL_REASONS.map(r => ({ ...r, data: { ...r.data, status: false } })),
     },
   },
   stocks: [
@@ -67,17 +135,49 @@ const PAIR_TRADES = [
   { pair: "ADRO / ITMG", ratio: 1.12, zscore: 1.5, entry: "Long ITMG, Short ADRO", sl: "Ratio > 1.20", tp: "Ratio < 1.05", conf: 70 },
 ];
 
-function SignalCard({ title, data, timeframe }: { title: string; data: typeof SIGNALS.ihsg.daily | typeof SIGNALS.ihsg.h4; timeframe: string }) {
-  const colors = {
+// ============================================================
+// COMPONENTS
+// ============================================================
+
+function SignalReasonSection({ label, data }: { label: string; data: typeof WYCKOFF_DATA }) {
+  const [open, setOpen] = useState(true);
+  return (
+    <div className="border border-surface-200 rounded-lg overflow-hidden">
+      <button onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between p-2.5 bg-surface-100 hover:bg-surface-200 transition-colors">
+        <div className="flex items-center gap-2">
+          {data.status ? <CheckCircle size={14} className="text-green-400" /> : <XCircle size={14} className="text-red-400" />}
+          <span className="text-xs font-bold text-text-primary">{label}</span>
+        </div>
+        {open ? <ChevronUp size={14} className="text-text-muted" /> : <ChevronDown size={14} className="text-text-muted" />}
+      </button>
+      {open && (
+        <div className="p-2.5 space-y-1">
+          {data.lines.map((line, i) => (
+            <div key={i} className="flex items-start gap-2 text-[11px]">
+              <span className="mt-0.5">{line.ok ? "✅" : "❌"}</span>
+              <span className={`${line.ok ? "text-text-secondary" : "text-text-muted"}`}>{line.text}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SignalCard({ title, data, timeframe }: { title: string; data: typeof SIGNALS.ihsg.daily; timeframe: string }) {
+  const colors: Record<string, { bg: string; text: string }> = {
     BUY: { bg: "bg-green-500/10 border-green-500/30 text-green-400", text: "BUY ▲" },
     SELL: { bg: "bg-red-500/10 border-red-500/30 text-red-400", text: "SELL ▼" },
     NEUTRAL: { bg: "bg-yellow-500/10 border-yellow-500/30 text-yellow-400", text: "NEUTRAL ◆" },
     HOLD: { bg: "bg-blue-500/10 border-blue-500/30 text-blue-400", text: "HOLD ●" },
   };
-  const c = colors[data.signal as keyof typeof colors] || colors.NEUTRAL;
+  const c = colors[data.signal] || colors.NEUTRAL;
+  const [showReasons, setShowReasons] = useState(true);
 
   return (
     <div className="rounded-xl border border-surface-200 bg-surface/60 overflow-hidden">
+      {/* Header */}
       <div className="p-3 border-b border-surface-200 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Activity size={14} className="text-primary-400" />
@@ -86,13 +186,14 @@ function SignalCard({ title, data, timeframe }: { title: string; data: typeof SI
         </div>
         <div className={`px-2.5 py-1 rounded-lg border text-xs font-bold ${c.bg}`}>{c.text}</div>
       </div>
-      <div className="p-3 space-y-3">
-        {/* Main Signal */}
-        <div className="flex items-center justify-between">
+
+      {/* Price & Confidence */}
+      <div className="p-3 border-b border-surface-200">
+        <div className="flex items-center justify-between mb-3">
           <span className="text-2xl font-bold font-mono text-text-primary">{formatNumber(data.price)}</span>
-          <div className="flex items-center gap-1">
-            <span className="text-xs text-text-muted">Confidence:</span>
-            <div className="w-20 h-2 rounded-full bg-surface-200 overflow-hidden">
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] text-text-muted">Confidence:</span>
+            <div className="w-24 h-2.5 rounded-full bg-surface-200 overflow-hidden">
               <div className={`h-full rounded-full ${data.confidence >= 70 ? "bg-green-500" : data.confidence >= 50 ? "bg-yellow-500" : "bg-red-500"}`}
                 style={{ width: `${data.confidence}%` }} />
             </div>
@@ -102,59 +203,53 @@ function SignalCard({ title, data, timeframe }: { title: string; data: typeof SI
           </div>
         </div>
 
-        {/* Levels */}
+        {/* Levels Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           <div className="p-2 rounded-lg bg-surface-100">
-            <p className="text-[9px] text-text-muted">Entry</p>
+            <p className="text-[9px] text-text-muted">Entry Range</p>
             <p className="text-xs font-bold font-mono text-text-primary">
               {data.entry.min > 0 ? `${formatNumber(data.entry.min)} - ${formatNumber(data.entry.max)}` : "Menunggu"}
             </p>
           </div>
           <div className="p-2 rounded-lg bg-surface-100">
             <p className="text-[9px] text-text-muted">Stop Loss</p>
-            <p className="text-xs font-bold font-mono text-loss">{formatNumber(data.sl)}<span className="text-[9px] ml-1">({data.slPercent}%)</span></p>
+            <p className="text-xs font-bold font-mono text-loss">{formatNumber(data.sl)} <span className="text-[9px] font-normal">({data.slPercent}%)</span></p>
           </div>
           <div className="p-2 rounded-lg bg-surface-100">
-            <p className="text-[9px] text-text-muted">TP1</p>
-            <p className="text-xs font-bold font-mono text-gain">{data.tp1 > 0 ? formatNumber(data.tp1) : "-"}<span className="text-[9px] ml-1">({data.tp1Percent}%)</span></p>
+            <p className="text-[9px] text-text-muted">Take Profit 1</p>
+            <p className="text-xs font-bold font-mono text-gain">{data.tp1 > 0 ? formatNumber(data.tp1) : "-"} <span className="text-[9px] font-normal">({data.tp1Percent}%)</span></p>
           </div>
           <div className="p-2 rounded-lg bg-surface-100">
-            <p className="text-[9px] text-text-muted">TP2 / R:R</p>
-            <p className="text-xs font-bold font-mono text-gain">{data.tp2 > 0 ? formatNumber(data.tp2) : "-"} / <span className="text-text-primary">{data.rr}</span></p>
+            <p className="text-[9px] text-text-muted">TP 2 / R:R</p>
+            <p className="text-xs font-bold font-mono text-gain">{data.tp2 > 0 ? formatNumber(data.tp2) : "-"} <span className="text-text-primary">| R:R {data.rr}</span></p>
           </div>
-        </div>
-
-        {/* Analysis Methods */}
-        <div className="space-y-2">
-          <MethodCard icon={Target} title="Wyckoff Analysis" content={data.wyckoff} color="text-blue-400" />
-          <MethodCard icon={Layers} title="Gann Analysis" content={data.gann} color="text-purple-400" />
-          {data.pair && <MethodCard icon={Activity} title="Pair Trading Signal" content={data.pair} color="text-orange-400" />}
-          <MethodCard icon={AlertTriangle} title="Risk Management" content={data.risk} color="text-yellow-400" />
         </div>
       </div>
-    </div>
-  );
-}
 
-function MethodCard({ icon: Icon, title, content, color }: { icon: React.ElementType; title: string; content: string; color: string }) {
-  const [expanded, setExpanded] = useState(false);
-  return (
-    <div className="rounded-lg bg-surface-100 border border-surface-200 overflow-hidden">
-      <button onClick={() => setExpanded(!expanded)} className="w-full flex items-center justify-between p-2 text-left">
-        <div className="flex items-center gap-1.5">
-          <Icon size={12} className={color} />
-          <span className="text-[10px] font-semibold text-text-primary">{title}</span>
-        </div>
-        {expanded ? <ChevronUp size={12} className="text-text-muted" /> : <ChevronDown size={12} className="text-text-muted" />}
-      </button>
-      {expanded && <div className="px-2 pb-2"><p className="text-[10px] text-text-secondary leading-relaxed">{content}</p></div>}
+      {/* ALASAN SINYAL */}
+      <div className="p-3">
+        <button onClick={() => setShowReasons(!showReasons)}
+          className="flex items-center gap-2 mb-2">
+          <Brain size={14} className="text-primary-400" />
+          <span className="text-xs font-bold text-text-primary">📋 ALASAN SINYAL {data.signal}</span>
+          {showReasons ? <ChevronUp size={14} className="text-text-muted" /> : <ChevronDown size={14} className="text-text-muted" />}
+        </button>
+
+        {showReasons && (
+          <div className="space-y-1.5 animate-fade-in">
+            {data.reasons.map((reason) => (
+              <SignalReasonSection key={reason.id} label={reason.label} data={reason.data} />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
 
 export default function AnalysisPage() {
   const [activeTimeframe, setActiveTimeframe] = useState("daily");
-  const [chartSymbol, setChartSymbol] = useState("IDX:COMPOSITE");
+  const [chartSymbol] = useState("IDX:COMPOSITE");
   const tf = activeTimeframe as keyof typeof SIGNALS.ihsg;
   const data = SIGNALS.ihsg[tf];
 
@@ -174,7 +269,7 @@ export default function AnalysisPage() {
           {/* Timeframe Selector */}
           <div className="flex gap-1 border-b border-surface-200">
             {[
-              { key: "daily", label: "Daily", desc: "Swing Trading" },
+              { key: "daily", label: "Daily", desc: "Swing" },
               { key: "h4", label: "4-Hour", desc: "Intraday" },
               { key: "h1", label: "1-Hour", desc: "Scalping" },
             ].map(t => (
@@ -189,21 +284,20 @@ export default function AnalysisPage() {
 
           {/* IHSG Chart + Signal */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-            {/* Chart */}
             <div className="rounded-xl border border-surface-200 bg-surface/60 overflow-hidden" style={{ height: 500 }}>
-              <TVAdvancedChart symbol={chartSymbol} studies={["RSI@tv-basicstudies", "MACD@tv-basicstudies", "MASimple@tv-basicstudies", "BollingerBands@tv-basicstudies", "StochasticRSI@tv-basicstudies"]} />
+              <TVAdvancedChart symbol={chartSymbol}
+                studies={["RSI@tv-basicstudies", "MACD@tv-basicstudies", "MASimple@tv-basicstudies", "BollingerBands@tv-basicstudies", "StochasticRSI@tv-basicstudies"]} />
             </div>
-            {/* Signal Card */}
             <SignalCard title="IHSG Signal" data={data} timeframe={activeTimeframe.toUpperCase()} />
           </div>
 
-          {/* Stock Signals */}
+          {/* Stock Signals Table */}
           <div className="rounded-xl border border-surface-200 bg-surface/60 overflow-hidden">
             <div className="p-3 border-b border-surface-200 flex items-center justify-between">
               <h2 className="text-sm font-bold text-text-primary flex items-center gap-2">
                 <TrendingUp size={14} className="text-primary-400" /> Top Signals - LQ45 Stocks
               </h2>
-              <span className="text-[10px] text-text-muted">Multi-method analysis: Wyckoff • Gann • Risk Mgmt</span>
+              <span className="text-[10px] text-text-muted">Wyckoff • Gann • Risk Management</span>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-xs">
@@ -221,13 +315,12 @@ export default function AnalysisPage() {
                 </tr></thead>
                 <tbody className="divide-y divide-surface-100">
                   {SIGNALS.stocks.map(s => (
-                    <tr key={s.symbol} className="hover:bg-surface-100/50 transition-colors">
+                    <tr key={s.symbol} className="hover:bg-surface-100/50">
                       <td className="px-2 py-2 font-bold text-text-primary">{s.symbol}</td>
                       <td className="px-2 py-2 text-center">
                         <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${
                           s.signal === "BUY" ? "bg-green-500/15 text-green-400" :
-                          s.signal === "SELL" ? "bg-red-500/15 text-red-400" :
-                          "bg-yellow-500/15 text-yellow-400"
+                          s.signal === "SELL" ? "bg-red-500/15 text-red-400" : "bg-yellow-500/15 text-yellow-400"
                         }`}>{s.signal === "BUY" ? "▲ BUY" : s.signal === "SELL" ? "▼ SELL" : "● HOLD"}</span>
                       </td>
                       <td className="px-2 py-2 text-center font-mono">{s.conf}%</td>
@@ -251,7 +344,7 @@ export default function AnalysisPage() {
               <h2 className="text-sm font-bold text-text-primary flex items-center gap-2">
                 <Activity size={14} className="text-orange-400" /> Pair Trading Analysis
               </h2>
-              <p className="text-[10px] text-text-muted">Saham berkorelasi tinggi • Z-score based • Mean-reversion strategy</p>
+              <p className="text-[10px] text-text-muted">Saham berkorelasi tinggi • Z-score based • Mean-reversion</p>
             </div>
             <div className="p-3">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
@@ -277,10 +370,10 @@ export default function AnalysisPage() {
             </div>
           </div>
 
-          {/* TV Technical Analysis + Market Overview */}
+          {/* TV Widgets */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
             <div className="rounded-xl border border-surface-200 bg-surface/60 overflow-hidden">
-              <div className="p-3 border-b border-surface-200"><h2 className="text-sm font-bold text-text-primary">Technical Analysis Summary</h2></div>
+              <div className="p-3 border-b border-surface-200"><h2 className="text-sm font-bold text-text-primary">Technicals Summary</h2></div>
               <TVTechnicalAnalysis symbol="IDX:COMPOSITE" />
             </div>
             <div className="rounded-xl border border-surface-200 bg-surface/60 overflow-hidden">
@@ -288,7 +381,7 @@ export default function AnalysisPage() {
             </div>
           </div>
 
-          <p className="text-xs text-text-muted italic">*Analisis berdasarkan Wyckoff, Gann, Pair Trading, dan Risk Management. Bukan saran investasi.</p>
+          <p className="text-xs text-text-muted italic">*Analisis berdasarkan Wyckoff, Gann, MACD, RSI, Volume, S/R, Timeframe Confluence. Bukan saran investasi.</p>
         </main>
       </div>
     </div>
