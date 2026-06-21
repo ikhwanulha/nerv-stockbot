@@ -48,10 +48,10 @@ const sidebarLinks = [
     ],
   },
   {
-    section: "Tools",
+    section: "Analytics",
     items: [
       { href: "/chart", label: "Chart Analysis", icon: BarChart3 },
-      { href: "/pattern-scanner", label: "Pattern Scanner", icon: Activity },
+      { href: "/analytics", label: "Analytics & Heatmap", icon: Activity },
     ],
   },
 ];

@@ -1,149 +1,91 @@
-// API Berita - Menyediakan berita pasar modal Indonesia dengan sentimen
+// API Berita - 55 berita unik dari berbagai emiten
 import { NextRequest, NextResponse } from "next/server";
-import { NewsItem } from "@/types";
 
-const dummyNews: NewsItem[] = [
-  {
-    id: "1",
-    title: "IHSG Ditutup Menguat, Investor Asing Catatkan Net Buy Rp 1,2 Triliun",
-    summary: "Indeks Harga Saham Gabungan (IHSG) ditutup menguat 0,85% pada perdagangan hari ini. Investor asing mencatatkan net buy sebesar Rp 1,2 triliun, terutama di sektor perbankan dan teknologi.",
-    content: "Indeks Harga Saham Gabungan (IHSG) berhasil ditutup di zona hijau pada perdagangan hari ini, menguat 0,85% ke level 7.245. Penguatan ini didorong oleh aksi beli investor asing yang mencatatkan net buy sebesar Rp 1,2 triliun.\n\nSektor perbankan menjadi primadona dengan penguatan saham BBCA (+1,2%), BBRI (+0,8%), dan BMRI (+1,5%). Sementara itu, sektor teknologi juga turut mendorong indeks dengan GOTO yang naik 2,1%.\n\nAnalis memperkirakan IHSG masih berpotensi melanjutkan penguatan dalam jangka pendek, didukung oleh sentimen positif dari data ekonomi domestik dan aliran dana asing yang masih deras masuk ke pasar modal Indonesia.\n\nDisclaimer: Berita ini bersifat informatif, bukan rekomendasi investasi.",
-    source: "NERV News",
-    url: "#",
-    sentiment: "positive",
-    relatedStocks: ["BBCA", "BBRI", "BMRI", "GOTO"],
-    publishedAt: new Date().toISOString(),
-  },
-  {
-    id: "2",
-    title: "Bank Indonesia Tahan Suku Bunga di 6,25%, Pasar Bereaksi Positif",
-    summary: "BI memutuskan untuk mempertahankan suku bunga acuan di level 6,25% sesuai ekspektasi pasar. Keputusan ini diambil untuk menjaga stabilitas nilai tukar rupiah.",
-    content: "Bank Indonesia (BI) dalam Rapat Dewan Gubernur terbaru memutuskan untuk mempertahankan suku bunga acuan BI-Rate di level 6,25%. Keputusan ini sesuai dengan ekspektasi pasar dan diambil untuk menjaga stabilitas nilai tukar rupiah di tengah ketidakpastian global.\n\nGubernur BI menyatakan bahwa keputusan ini juga didasarkan pada proyeksi inflasi yang masih terkendali dan pertumbuhan ekonomi yang stabil. Pasar merespons positif keputusan ini, terlihat dari penguatan IHSG dan rupiah.\n\nKe depannya, BI akan terus memantau perkembangan ekonomi global dan domestik untuk menentukan arah kebijakan moneter yang tepat.",
-    source: "NERV News",
-    url: "#",
-    sentiment: "positive",
-    relatedStocks: ["BBCA", "BBRI", "BMRI", "BBNI"],
-    publishedAt: new Date(Date.now() - 3600000).toISOString(),
-  },
-  {
-    id: "3",
-    title: "BBRI Catatkan Laba Bersih Rp 45 Triliun, Dividen Yield Menarik",
-    summary: "PT Bank Rakyat Indonesia Tbk (BBRI) membukukan laba bersih Rp 45 triliun sepanjang tahun buku 2023. Dividen yield yang ditawarkan mencapai 6,5%.",
-    content: "PT Bank Rakyat Indonesia Tbk (BBRI) mengumumkan kinerja keuangan yang solid sepanjang tahun buku 2023 dengan membukukan laba bersih sebesar Rp 45 triliun. Angka ini menunjukkan pertumbuhan yang positif dibandingkan tahun sebelumnya.\n\nYang menarik, BBRI menawarkan dividen yield yang cukup atraktif yaitu sebesar 6,5%, menjadikannya salah satu saham dengan dividen tertinggi di sektor perbankan.\n\nAnalis merekomendasikan akumulasi saham BBRI dengan target harga jangka panjang mengingat fundamental perusahaan yang kuat dan potensi pertumbuhan di segmen mikro yang menjadi niche bisnis BBRI.",
-    source: "NERV News",
-    url: "#",
-    sentiment: "positive",
-    relatedStocks: ["BBRI"],
-    publishedAt: new Date(Date.now() - 7200000).toISOString(),
-  },
-  {
-    id: "4",
-    title: "TLKM Hadapi Tekanan, Pendapatan Data Menurun",
-    summary: "PT Telkom Indonesia Tbk (TLKM) mengalami tekanan pada harga sahamnya setelah laporan pendapatan data menunjukkan penurunan. Harga saham TLKM turun 2,3%.",
-    content: "PT Telkom Indonesia Tbk (TLKM) mengalami tekanan jual pada perdagangan hari ini setelah laporan menunjukkan penurunan pendapatan dari segmen data. Harga saham TLKM ditutup turun 2,3%.\n\nPenurunan ini dipicu oleh persaingan ketat di industri telekomunikasi dan penurunan ARPU (Average Revenue Per User) akibat perang tarif antar operator.\n\nMeskipun demikian, fundamental TLKM masih tergolong kuat dengan posisi kas yang solid dan jaringan infrastruktur yang luas. Beberapa analis melihat penurunan ini sebagai peluang akumulasi bagi investor jangka panjang.",
-    source: "NERV News",
-    url: "#",
-    sentiment: "negative",
-    relatedStocks: ["TLKM", "EXCL", "ISAT"],
-    publishedAt: new Date(Date.now() - 10800000).toISOString(),
-  },
-  {
-    id: "5",
-    title: "ADRO dan BYAN Tertekan, Harga Batu Bara Global Turun",
-    summary: "Harga saham emiten batu bara seperti ADRO dan BYAN tertekan akibat penurunan harga komoditas batu bara global. ADRO turun 3,1% dan BYAN turun 2,8%.",
-    content: "Saham-saham emiten batu bara mengalami tekanan signifikan pada perdagangan hari ini. ADRO ditutup turun 3,1% sementara BYAN turun 2,8%. Pelemahan ini sejalan dengan penurunan harga batu bara global yang disebabkan oleh melemahnya permintaan dari China dan India.\n\nMeskipun demikian, secara fundamental emiten batu bara Indonesia masih mencatatkan kinerja yang solid dengan laba bersih yang tinggi. Namun, volatilitas harga komoditas tetap menjadi risiko utama bagi sektor ini.\n\nAnalis menyarankan investor untuk mencermati perkembangan harga komoditas global dan kebijakan energi di negara-negara tujuan ekspor sebelum mengambil keputusan investasi.",
-    source: "NERV News",
-    url: "#",
-    sentiment: "negative",
-    relatedStocks: ["ADRO", "BYAN", "PTBA", "ITMG"],
-    publishedAt: new Date(Date.now() - 14400000).toISOString(),
-  },
-  {
-    id: "6",
-    title: "GOTO Umumkan Strategi Baru Menuju Profitabilitas",
-    summary: "PT GoTo Gojek Tokopedia Tbk (GOTO) mengumumkan strategi baru untuk mencapai profitabilitas pada akhir tahun fiskal. Saham GOTO merespons positif.",
-    content: "PT GoTo Gojek Tokopedia Tbk (GOTO) mengumumkan strategi baru yang bertujuan untuk mencapai profitabilitas pada akhir tahun fiskal 2024. Strategi ini mencakup efisiensi biaya operasional dan optimalisasi pendapatan dari ekosistem yang terintegrasi.\n\nManajemen GOTO optimis dengan target ini mengingat perbaikan unit ekonomi yang terus menunjukkan tren positif dalam beberapa kuartal terakhir.\n\nPasar merespons positif pengumuman ini dengan harga saham GOTO yang naik 2,1%. Beberapa analis memberikan rekomendasi beli dengan target harga yang lebih tinggi.",
-    source: "NERV News",
-    url: "#",
-    sentiment: "positive",
-    relatedStocks: ["GOTO"],
-    publishedAt: new Date(Date.now() - 18000000).toISOString(),
-  },
-  {
-    id: "7",
-    title: "Pemerintah Umumkan Insentif Pajak untuk Sektor Properti",
-    summary: "Pemerintah mengumumkan insentif pajak baru untuk sektor properti, mendorong penguatan saham-saham properti seperti PWON, CTRA, dan BSDE.",
-    content: "Pemerintah melalui Kementerian Keuangan mengumumkan paket insentif pajak baru untuk sektor properti. Insentif ini mencakup pembebasan PPN untuk rumah dengan harga di bawah Rp 2 miliar dan kemudahan perizinan.\n\nPengumuman ini mendorong penguatan saham-saham properti. PWON naik 3,5%, CTRA naik 2,8%, dan BSDE naik 2,2%. Sektor properti menjadi salah satu sektor dengan performa terbaik hari ini.\n\nInsentif ini diharapkan dapat mendorong pertumbuhan sektor properti yang selama ini tertekan oleh tingginya suku bunga.",
-    source: "NERV News",
-    url: "#",
-    sentiment: "positive",
-    relatedStocks: ["PWON", "CTRA", "BSDE", "LPKR"],
-    publishedAt: new Date(Date.now() - 21600000).toISOString(),
-  },
-  {
-    id: "8",
-    title: "Nilai Tukar Rupiah Melemah ke Rp 16.200 per USD",
-    summary: "Rupiah melemah ke level Rp 16.200 per dolar AS dipengaruhi oleh penguatan dolar AS dan ketidakpastian global. Saham-saham impor tertekan.",
-    content: "Nilai tukar rupiah terhadap dolar AS melemah ke level Rp 16.200 per USD, terendah dalam beberapa bulan terakhir. Pelemahan ini dipicu oleh penguatan indeks dolar AS dan meningkatnya ketidakpastian global terkait kebijakan suku bunga The Fed.\n\nPelemahan rupiah ini memberikan tekanan pada saham-saham yang memiliki utang dalam dolar AS dan perusahaan yang bergantung pada impor. Namun, saham-saham eksportir seperti emiten batu bara dan CPO justru diuntungkan.\n\nBI terus melakukan intervensi di pasar untuk menstabilkan nilai tukar rupiah.",
-    source: "NERV News",
-    url: "#",
-    sentiment: "negative",
-    relatedStocks: ["ADRO", "ITMG", "UNVR", "HMSP"],
-    publishedAt: new Date(Date.now() - 25200000).toISOString(),
-  },
-  {
-    id: "9",
-    title: "ASII Berencana Spin Off Bisnis Alat Berat",
-    summary: "PT Astra International Tbk (ASII) berencana melakukan spin off bisnis alat berat untuk meningkatkan nilai pemegang saham. Saham ASII naik tipis.",
-    content: "PT Astra International Tbk (ASII) mengumumkan rencana untuk melakukan spin off pada divisi alat beratnya. Langkah ini diambil untuk meningkatkan fokus bisnis dan nilai pemegang saham.\n\nSpin off ini akan menjadikan United Tractors (UNTR) sebagai entitas yang lebih mandiri dengan potensi pertumbuhan yang lebih tinggi. ASII sendiri akan tetap menjadi pemegang saham utama.\n\nPasar merespons positif rencana ini dengan harga saham ASII yang naik tipis 0,5%. Analis melihat langkah ini sebagai katalis positif jangka panjang bagi ASII.",
-    source: "NERV News",
-    url: "#",
-    sentiment: "neutral",
-    relatedStocks: ["ASII", "UNTR"],
-    publishedAt: new Date(Date.now() - 28800000).toISOString(),
-  },
-  {
-    id: "10",
-    title: "IPO BREN dan MBMA Menjadi Sentimen Positif Pasar",
-    summary: "Initial Public Offering (IPO) BREN dan MBMA yang oversubscribed menjadi sentimen positif bagi pasar modal Indonesia. Investor antusias menyambut emiten baru.",
-    content: "Pasar modal Indonesia mencatatkan kesuksesan dengan IPO BREN (Barito Renewables Energy) dan MBMA (Merdeka Battery Materials) yang oversubscribed. Kedua emiten baru ini mendapat sambutan hangat dari investor.\n\nBREN yang bergerak di sektor energi terbarukan mencatatkan kelebihan permintaan hingga 5 kali lipat, sementara MBMA yang bergerak di sektor baterai kendaraan listrik oversubscribed 3 kali lipat.\n\nKesuksesan ini menunjukkan minat investor yang tinggi terhadap sektor energi baru terbarukan dan kendaraan listrik di Indonesia.",
-    source: "NERV News",
-    url: "#",
-    sentiment: "positive",
-    relatedStocks: ["BREN", "MBMA"],
-    publishedAt: new Date(Date.now() - 32400000).toISOString(),
-  },
+const dummyNews = [
+  {"id":"1","title":"MTEL Masuk Daftar Pemantauan Khusus","summary":"BEI memasukkan MTEL ke dalam daftar pemantauan khusus akibat pergerakan harga yang tidak wajar. Investor diimbau untuk berhati-hati.","content":"BEI memasukkan MTEL ke dalam daftar pemantauan khusus akibat pergerakan harga yang tidak wajar. Investor diimbau untuk berhati-hati.\n\nDisclaimer: Berita ini bersifat informatif, bukan rekomendasi investasi.","source":"Kontan","url":"#","sentiment":"positive","relatedStocks":["MTEL"],"publishedAt":"2026-06-21T08:00:00","category":"Macro Economy"},
+  {"id":"2","title":"Analyst Naikkan Target Price ASII ke Rp 43992","summary":"Analyst dari berbagai sekuritas memberikan rekomendasi BUY untuk saham ASII dengan target harga rata-rata Rp 43992.","content":"Analyst dari berbagai sekuritas memberikan rekomendasi BUY untuk saham ASII dengan target harga rata-rata Rp 43992. Potensi kenaikan diperkirakan mencapai 1.5%.\n\nDisclaimer: Berita ini bersifat informatif, bukan rekomendasi investasi.","source":"Bisnis Indonesia","url":"#","sentiment":"neutral","relatedStocks":["ASII"],"publishedAt":"2026-06-20T09:01:00","category":"Financial Results"},
+  {"id":"3","title":"TOWR Listing Perdana di BEI, Harga IPO Rp 25049","summary":"TOWR resmi mencatatkan sahamnya di BEI dengan harga IPO Rp 25049. Perusahaan berencana menggunakan dana segar untuk ekspansi bisnis.","content":"TOWR resmi mencatatkan sahamnya di BEI dengan harga IPO Rp 25049. Perusahaan berencana menggunakan dana segar untuk ekspansi bisnis.\n\nDisclaimer.","source":"CNBC Indonesia","url":"#","sentiment":"neutral","relatedStocks":["TOWR"],"publishedAt":"2026-06-19T10:02:00","category":"IPO"},
+  {"id":"4","title":"Harga Saham ADRO Terbang 14.6% dalam Sebulan","summary":"Saham ADRO mencatatkan kenaikan signifikan sebesar 14.6% dalam sebulan terakhir.","content":"Saham ADRO mencatatkan kenaikan signifikan sebesar 14.6% dalam sebulan terakhir. Peningkatan ini didorong oleh kinerja keuangan yang solid.\n\nDisclaimer.","source":"CNBC Indonesia","url":"#","sentiment":"positive","relatedStocks":["ADRO","ITMG"],"publishedAt":"2026-06-18T11:03:00","category":"Market News"},
+  {"id":"5","title":"ISAT Cetak Laba Bersih Rp 16881T di 2024","summary":"ISAT membukukan laba bersih sebesar Rp 16881T sepanjang tahun buku 2024.","content":"ISAT membukukan laba bersih sebesar Rp 16881T. Analyst memberikan rekomendasi positif dengan target harga yang lebih tinggi.\n\nDisclaimer.","source":"Kontan","url":"#","sentiment":"neutral","relatedStocks":["ISAT","TBIG"],"publishedAt":"2026-06-17T12:04:00","category":"Macro Economy"},
+  {"id":"6","title":"Inflasi Juni Tercatat Tinggi, HMSP Terdampak","summary":"Data inflasi bulan Juni lebih tinggi dari ekspektasi. Saham-saham seperti HMSP terkena dampak.","content":"Data inflasi bulan Juni lebih tinggi dari ekspektasi. Saham-saham seperti HMSP terkena dampak dari sentimen ini.\n\nDisclaimer.","source":"Reuters","url":"#","sentiment":"negative","relatedStocks":["HMSP"],"publishedAt":"2026-06-16T13:05:00","category":"Macro Economy"},
+  {"id":"7","title":"ISAT Raih Kontrak Baru Rp 32288T","summary":"ISAT mengumumkan perolehan kontrak baru senilai Rp 32288T.","content":"ISAT mengumumkan perolehan kontrak baru senilai Rp 32288T. Kontrak ini akan dikerjakan dalam waktu dekat.\n\nDisclaimer.","source":"Bloomberg","url":"#","sentiment":"positive","relatedStocks":["ISAT","BSDE"],"publishedAt":"2026-06-15T14:06:00","category":"Corporate Action"},
+  {"id":"8","title":"Buyback Saham SMGR Rp 21183 Miliar","summary":"SMGR mengumumkan program buyback saham senilai Rp 21183 miliar.","content":"SMGR mengumumkan program buyback saham senilai Rp 21183 miliar. Buyback ini menunjukkan kepercayaan manajemen.\n\nDisclaimer.","source":"NERV News","url":"#","sentiment":"positive","relatedStocks":["SMGR"],"publishedAt":"2026-06-14T15:07:00","category":"Market News"},
+  {"id":"9","title":"BBCA Cetak Laba Bersih Rp 15089T di 2023","summary":"BBCA membukukan laba bersih sebesar Rp 15089T sepanjang tahun buku 2023.","content":"BBCA membukukan laba bersih sebesar Rp 15089T. Analyst memberikan rekomendasi positif.\n\nDisclaimer.","source":"NERV News","url":"#","sentiment":"positive","relatedStocks":["BBCA"],"publishedAt":"2026-06-13T16:08:00","category":"Financial Results"},
+  {"id":"10","title":"PTBA Bagikan Dividen Interim Rp 45734","summary":"PTBA mengumumkan pembagian dividen interim sebesar Rp 45734 per saham.","content":"PTBA mengumumkan pembagian dividen interim sebesar Rp 45734 per saham. Keputusan ini berdasarkan kinerja keuangan yang solid.\n\nDisclaimer.","source":"CNBC Indonesia","url":"#","sentiment":"positive","relatedStocks":["PTBA","ARTO"],"publishedAt":"2026-06-12T17:09:00","category":"Dividend"},
+  {"id":"11","title":"RUPS ISAT: Dividen dan Buyback Disetujui","summary":"RUPS ISAT menyetujui pembagian dividen dan program buyback saham.","content":"RUPS ISAT menyetujui pembagian dividen dan program buyback saham. Kedua aksi korporasi ini diharapkan dapat meningkatkan nilai pemegang saham.\n\nDisclaimer.","source":"NERV News","url":"#","sentiment":"positive","relatedStocks":["ISAT"],"publishedAt":"2026-06-11T18:10:00","category":"Corporate Action"},
+  {"id":"12","title":"Buyback Saham INTP Rp 26365 Miliar","summary":"INTP mengumumkan program buyback saham senilai Rp 26365 miliar.","content":"INTP mengumumkan program buyback saham. Buyback ini menunjukkan kepercayaan manajemen terhadap nilai perusahaan.\n\nDisclaimer.","source":"Kontan","url":"#","sentiment":"positive","relatedStocks":["INTP"],"publishedAt":"2026-06-10T19:11:00","category":"Market News"},
+  {"id":"13","title":"ADRO Umumkan Dividen Rp 20265","summary":"ADRO mengumumkan pembagian dividen sebesar Rp 20265 per saham dengan yield atraktif.","content":"ADRO mengumumkan pembagian dividen sebesar Rp 20265 per saham. Yield dividen mencapai 4.4%.\n\nDisclaimer.","source":"Bisnis Indonesia","url":"#","sentiment":"neutral","relatedStocks":["ADRO"],"publishedAt":"2026-06-09T08:12:00","category":"Dividend"},
+  {"id":"14","title":"Pergerakan Saham ISAT: Resistance di 9550","summary":"Saham ISAT memiliki resistance kuat di level 9550.","content":"Saham ISAT memiliki resistance kuat di level 9550. Jika berhasil ditembus, potensi kenaikan cukup besar.\n\nDisclaimer.","source":"Kontan","url":"#","sentiment":"neutral","relatedStocks":["ISAT"],"publishedAt":"2026-06-08T09:13:00","category":"Technical Analysis"},
+  {"id":"15","title":"Kinerja KLBF Kuartal IV Tumbuh 23.8%","summary":"Kinerja keuangan KLBF menunjukkan pertumbuhan 23.8% dibandingkan kuartal sebelumnya.","content":"Kinerja keuangan KLBF kuartal ini menunjukkan pertumbuhan 23.8%. Pendapatan dan laba bersih tercatat di atas ekspektasi.\n\nDisclaimer.","source":"Reuters","url":"#","sentiment":"positive","relatedStocks":["KLBF"],"publishedAt":"2026-06-07T10:14:00","category":"Financial Results"},
+  {"id":"16","title":"INDF Ekspansi ke Pasar Baru Rp 49T","summary":"INDF mengumumkan rencana ekspansi dengan investasi besar.","content":"INDF mengumumkan rencana ekspansi besar-besaran untuk pengembangan bisnis baru.\n\nDisclaimer.","source":"Bloomberg","url":"#","sentiment":"neutral","relatedStocks":["INDF"],"publishedAt":"2026-06-06T11:15:00","category":"Corporate Action"},
+  {"id":"17","title":"BBCA Rekomendasi Buy, Target Rp 10500","summary":"Analyst memberikan rekomendasi BUY untuk BBCA dengan target harga Rp 10500.","content":"Sejumlah analyst memberikan rekomendasi BUY untuk BBCA dengan target harga Rp 10500. Potensi kenaikan 8%.\n\nDisclaimer.","source":"CNBC Indonesia","url":"#","sentiment":"positive","relatedStocks":["BBCA","BBRI"],"publishedAt":"2026-06-21T10:00:00","category":"Financial Results"},
+  {"id":"18","title":"BMRI Target Price Rp 6750 oleh Analyst","summary":"Analyst menaikkan target harga BMRI menjadi Rp 6750.","content":"Analyst menaikkan target harga BMRI menjadi Rp 6750 dengan rekomendasi BUY. Sektor perbankan tetap menarik.\n\nDisclaimer.","source":"Bisnis Indonesia","url":"#","sentiment":"positive","relatedStocks":["BMRI"],"publishedAt":"2026-06-20T11:00:00","category":"Financial Results"},
+  {"id":"19","title":"GOTO Umumkan Strategi Profitabilitas","summary":"GOTO mengumumkan strategi baru menuju profitabilitas.","content":"GOTO mengumumkan strategi baru untuk mencapai profitabilitas pada akhir tahun fiskal 2024.\n\nDisclaimer.","source":"Reuters","url":"#","sentiment":"positive","relatedStocks":["GOTO"],"publishedAt":"2026-06-19T12:00:00","category":"Corporate Action"},
+  {"id":"20","title":"TLKM Hadapi Tekanan Persaingan","summary":"TLKM mengalami tekanan akibat persaingan ketat di industri telekomunikasi.","content":"TLKM mengalami tekanan pada harga sahamnya akibat persaingan ketat dan penurunan ARPU.\n\nDisclaimer.","source":"Kontan","url":"#","sentiment":"negative","relatedStocks":["TLKM","EXCL"],"publishedAt":"2026-06-18T13:00:00","category":"Market News"},
+  {"id":"21","title":"IHSG Ditutup Menguat, Net Asing Rp 1.2T","summary":"IHSG ditutup menguat 0.85% dengan net buy asing Rp 1.2 triliun.","content":"IHSG berhasil ditutup di zona hijau didorong oleh aksi beli investor asing di sektor perbankan dan teknologi.\n\nDisclaimer.","source":"NERV News","url":"#","sentiment":"positive","relatedStocks":["BBCA","BBRI","BMRI"],"publishedAt":"2026-06-21T14:00:00","category":"Market News"},
+  {"id":"22","title":"BYAN Tertekan, Harga Batu Bara Turun","summary":"Harga saham BYAN tertekan akibat penurunan harga batu bara global.","content":"BYAN ditutup turun 2.8% akibat penurunan harga komoditas batu bara global.\n\nDisclaimer.","source":"Bloomberg","url":"#","sentiment":"negative","relatedStocks":["BYAN","ADRO"],"publishedAt":"2026-06-17T14:00:00","category":"Market News"},
+  {"id":"23","title":"Pemerintah Umumkan Insentif Properti","summary":"Pemerintah mengumumkan insentif pajak baru untuk sektor properti.","content":"Pemerintah memberikan insentif PPN untuk rumah di bawah Rp 2 miliar. Saham properti menguat.\n\nDisclaimer.","source":"NERV News","url":"#","sentiment":"positive","relatedStocks":["PWON","CTRA","BSDE"],"publishedAt":"2026-06-16T15:00:00","category":"Macro Economy"},
+  {"id":"24","title":"Rupiah Melemah ke Rp 16200 per USD","summary":"Nilai tukar rupiah melemah ke level Rp 16200 per dolar AS.","content":"Rupiah melemah dipicu oleh penguatan indeks dolar AS dan ketidakpastian global.\n\nDisclaimer.","source":"Reuters","url":"#","sentiment":"negative","relatedStocks":["UNVR","HMSP"],"publishedAt":"2026-06-15T16:00:00","category":"Macro Economy"},
+  {"id":"25","title":"ASII Spin Off Bisnis Alat Berat","summary":"ASII berencana spin off bisnis alat berat untuk meningkatkan nilai pemegang saham.","content":"ASII mengumumkan rencana spin off divisi alat berat yang akan menjadikan UNTR lebih mandiri.\n\nDisclaimer.","source":"CNBC Indonesia","url":"#","sentiment":"neutral","relatedStocks":["ASII","UNTR"],"publishedAt":"2026-06-14T17:00:00","category":"Corporate Action"},
+  {"id":"26","title":"IPO BREN Oversubscribed 5x","summary":"IPO BREN mencatatkan oversubscribed 5x lipat. Investor antusias.","content":"BREN yang bergerak di sektor energi terbarukan oversubscribed 5x dari target.\n\nDisclaimer.","source":"Bisnis Indonesia","url":"#","sentiment":"positive","relatedStocks":["BREN"],"publishedAt":"2026-06-13T08:00:00","category":"IPO"},
+  {"id":"27","title":"Bank Indonesia Tahan Suku Bunga 6.25%","summary":"BI mempertahankan suku bunga acuan di level 6.25% sesuai ekspektasi pasar.","content":"Bank Indonesia mempertahankan BI-Rate di 6.25% untuk menjaga stabilitas rupiah.\n\nDisclaimer.","source":"NERV News","url":"#","sentiment":"positive","relatedStocks":["BBCA","BBRI","BMRI"],"publishedAt":"2026-06-21T09:00:00","category":"Macro Economy"},
+  {"id":"28","title":"BBRI Laba Bersih Rp 45T, Dividen Menarik","summary":"BBRI membukukan laba bersih Rp 45T dengan dividen yield 6.5%.","content":"PT Bank Rakyat Indonesia membukukan laba bersih Rp 45T, menjadikannya salah satu saham dividen tertinggi.\n\nDisclaimer.","source":"CNBC Indonesia","url":"#","sentiment":"positive","relatedStocks":["BBRI"],"publishedAt":"2026-06-12T09:00:00","category":"Financial Results"},
+  {"id":"29","title":"CPIN Ekspansi Pakan Ternak","summary":"CPIN mengumumkan ekspansi bisnis pakan ternak dengan investasi Rp 5T.","content":"CPIN berinvestasi Rp 5T untuk memperluas kapasitas produksi pakan ternak.\n\nDisclaimer.","source":"Bisnis Indonesia","url":"#","sentiment":"positive","relatedStocks":["CPIN","JPFA"],"publishedAt":"2026-06-11T10:00:00","category":"Corporate Action"},
+  {"id":"30","title":"UNVR Tekanan Persaingan Produk","summary":"UNVR menghadapi tekanan dari persaingan produk lokal yang semakin ketat.","content":"UNVR mengalami penurunan pangsa pasar akibat produk lokal yang semakin kompetitif.\n\nDisclaimer.","source":"Kontan","url":"#","sentiment":"negative","relatedStocks":["UNVR"],"publishedAt":"2026-06-10T11:00:00","category":"Market News"},
+  {"id":"31","title":"ANTM Produksi Emas Naik 15%","summary":"Produksi emas ANTM naik 15% didorong oleh harga emas global yang tinggi.","content":"ANTM mencatatkan kenaikan produksi emas 15% seiring tingginya harga emas global.\n\nDisclaimer.","source":"Reuters","url":"#","sentiment":"positive","relatedStocks":["ANTM"],"publishedAt":"2026-06-09T12:00:00","category":"Financial Results"},
+  {"id":"32","title":"PGAS Konversi Utang Jadi Ekuitas","summary":"PGAS melakukan konversi utang menjadi ekuitas untuk memperkuat struktur modal.","content":"PGAS mengumumkan rencana konversi utang menjadi ekuitas senilai Rp 10T.\n\nDisclaimer.","source":"Bloomberg","url":"#","sentiment":"neutral","relatedStocks":["PGAS"],"publishedAt":"2026-06-08T13:00:00","category":"Corporate Action"},
+  {"id":"33","title":"EXCL dan ISAT Bersaing 5G","summary":"Persaingan EXCL dan ISAT di bisnis 5G semakin ketat.","content":"EXCL dan ISAT bersaing ketat dalam pengembangan jaringan 5G di Indonesia.\n\nDisclaimer.","source":"CNBC Indonesia","url":"#","sentiment":"neutral","relatedStocks":["EXCL","ISAT"],"publishedAt":"2026-06-07T14:00:00","category":"Market News"},
+  {"id":"34","title":"ACES Bukukan Pertumbuhan Penjualan","summary":"ACES mencatatkan pertumbuhan penjualan double digit di kuartal ini.","content":"ACES berhasil membukukan pertumbuhan penjualan 18% dibandingkan kuartal sebelumnya.\n\nDisclaimer.","source":"Bisnis Indonesia","url":"#","sentiment":"positive","relatedStocks":["ACES","ERAA"],"publishedAt":"2026-06-06T15:00:00","category":"Financial Results"},
+  {"id":"35","title":"KLBF Produk Baru Dorong Pendapatan","summary":"Peluncuran produk baru KLBF mendorong pertumbuhan pendapatan.","content":"KLBF meluncurkan produk baru yang berkontribusi positif terhadap pertumbuhan pendapatan.\n\nDisclaimer.","source":"Kontan","url":"#","sentiment":"positive","relatedStocks":["KLBF","KAEF"],"publishedAt":"2026-06-05T16:00:00","category":"Corporate Action"},
+  {"id":"36","title":"PTBA Produksi Batu Bara 2024","summary":"PTBA menargetkan produksi batu bara 40 juta ton di 2024.","content":"PTBA optimis mencapai target produksi batu bara 40 juta ton tahun 2024.\n\nDisclaimer.","source":"Reuters","url":"#","sentiment":"neutral","relatedStocks":["PTBA","ITMG"],"publishedAt":"2026-06-04T08:00:00","category":"Market News"},
+  {"id":"37","title":"BBNI Fokus Digital Banking","summary":"BBNI mempercepat transformasi digital banking untuk meningkatkan efisiensi.","content":"BBNI berinvestasi besar-besaran dalam transformasi digital banking.\n\nDisclaimer.","source":"Bisnis Indonesia","url":"#","sentiment":"positive","relatedStocks":["BBNI"],"publishedAt":"2026-06-03T09:00:00","category":"Corporate Action"},
+  {"id":"38","title":"SMGR Akuisisi Tambang Kapur","summary":"SMGR mengakuisisi tambang kapur untuk bahan baku semen.","content":"SMGR mengakuisisi tambang kapur senilai Rp 3T untuk mengamankan pasokan bahan baku.\n\nDisclaimer.","source":"CNBC Indonesia","url":"#","sentiment":"positive","relatedStocks":["SMGR","SMBR"],"publishedAt":"2026-06-02T10:00:00","category":"M&A"},
+  {"id":"39","title":"Harga Minyak Naik, Saham Energi Terbang","summary":"Kenaikan harga minyak global mendorong saham sektor energi.","content":"Harga minyak mentah naik 3% mendorong penguatan saham sektor energi seperti MEDC dan PGAS.\n\nDisclaimer.","source":"Bloomberg","url":"#","sentiment":"positive","relatedStocks":["PGAS","MEDC"],"publishedAt":"2026-06-21T07:00:00","category":"Market News"},
+  {"id":"40","title":"GGRM Produksi Rokok Turun","summary":"Produksi rokok GGRM turun akibat kenaikan cukai.","content":"GGRM mencatatkan penurunan produksi rokok sebesar 8% akibat kenaikan tarif cukai.\n\nDisclaimer.","source":"Kontan","url":"#","sentiment":"negative","relatedStocks":["GGRM","HMSP"],"publishedAt":"2026-06-01T11:00:00","category":"Financial Results"},
+  {"id":"41","title":"MBMA Produksi Baterai Dimulai","summary":"MBMA memulai produksi baterai kendaraan listrik tahun ini.","content":"MBMA resmi memulai produksi baterai kendaraan listrik di kawasan industri IMIP.\n\nDisclaimer.","source":"Reuters","url":"#","sentiment":"positive","relatedStocks":["MBMA"],"publishedAt":"2026-06-21T12:00:00","category":"Corporate Action"},
+  {"id":"42","title":"BREN Energi Terbarukan Ekspansi","summary":"BREN memperluas portofolio energi terbarukan.","content":"BREN berencana menambah kapasitas PLTS dan PLTA sebesar 500 MW.\n\nDisclaimer.","source":"CNBC Indonesia","url":"#","sentiment":"positive","relatedStocks":["BREN","PGEO"],"publishedAt":"2026-06-20T12:00:00","category":"Corporate Action"},
+  {"id":"43","title":"CUAN Target Produksi Tembaga","summary":"CUAN menargetkan produksi tembaga 300 ribu ton tahun ini.","content":"CUAN optimis mencapai target produksi tembaga seiring tingginya permintaan global.\n\nDisclaimer.","source":"Bisnis Indonesia","url":"#","sentiment":"positive","relatedStocks":["CUAN"],"publishedAt":"2026-06-19T13:00:00","category":"Financial Results"},
+  {"id":"44","title":"NIKL Nikel Hilirisasi","summary":"NIKL terus mempercepat program hilirisasi nikel.","content":"NIKL berinvestasi dalam pembangunan smelter nikel untuk hilirisasi.\n\nDisclaimer.","source":"Kontan","url":"#","sentiment":"positive","relatedStocks":["NIKL"],"publishedAt":"2026-06-18T14:00:00","category":"Corporate Action"},
+  {"id":"45","title":"MTEL Infrastruktur Digital","summary":"MTEL memperluas infrastruktur data center.","content":"MTEL berinvestasi Rp 5T untuk pembangunan data center baru di Jawa dan Sumatera.\n\nDisclaimer.","source":"Bloomberg","url":"#","sentiment":"positive","relatedStocks":["MTEL","TBIG"],"publishedAt":"2026-06-17T15:00:00","category":"Corporate Action"},
+  {"id":"46","title":"TOWR Ekspansi Menara","summary":"TOWR menambah 1000 menara telekomunikasi baru.","content":"TOWR berhasil menambah 1000 menara telekomunikasi baru di kuartal ini.\n\nDisclaimer.","source":"Bisnis Indonesia","url":"#","sentiment":"positive","relatedStocks":["TOWR","TBIG"],"publishedAt":"2026-06-16T16:00:00","category":"Financial Results"},
+  {"id":"47","title":"CENT Produksi Semen Naik","summary":"Produksi semen CENT naik 12% didorong permintaan infrastruktur.","content":"CENT mencatatkan kenaikan produksi semen 12% seiring pembangunan IKN.\n\nDisclaimer.","source":"CNBC Indonesia","url":"#","sentiment":"positive","relatedStocks":["CENT","SMGR"],"publishedAt":"2026-06-15T08:00:00","category":"Financial Results"},
+  {"id":"48","title":"Net Buy Asing Tertinggi di BBCA","summary":"Investor asing mencatatkan net buy tertinggi di saham BBCA.","content":"BBCA mencatatkan net buy asing tertinggi hari ini sebesar Rp 850 miliar.\n\nDisclaimer.","source":"NERV News","url":"#","sentiment":"positive","relatedStocks":["BBCA"],"publishedAt":"2026-06-21T15:00:00","category":"Market News"},
+  {"id":"49","title":"Sektor Teknologi Pimpin Penguatan","summary":"Sektor teknologi memimpin penguatan IHSG hari ini.","content":"Saham sektor teknologi seperti GOTO dan MTEL memimpin penguatan IHSG.\n\nDisclaimer.","source":"Reuters","url":"#","sentiment":"positive","relatedStocks":["GOTO","MTEL"],"publishedAt":"2026-06-21T14:30:00","category":"Market News"},
+  {"id":"50","title":"Kalender Dividen Juni 2024","summary":"Jadwal dividen emiten di bulan Juni 2024.","content":"Beberapa emiten akan membagikan dividen di bulan Juni 2024. Simak jadwal lengkapnya.\n\nDisclaimer.","source":"NERV News","url":"#","sentiment":"neutral","relatedStocks":["BBCA","BBRI","BMRI","TLKM"],"publishedAt":"2026-06-21T06:00:00","category":"Dividend"},
+  {"id":"51","title":"Pemerintah Dorong Hilirisasi Nikel","summary":"Pemerintah terus mendorong program hilirisasi nikel.","content":"Program hilirisasi nikel memberikan dampak positif bagi emiten seperti ANTM dan NIKL.\n\nDisclaimer.","source":"Bisnis Indonesia","url":"#","sentiment":"positive","relatedStocks":["ANTM","NIKL"],"publishedAt":"2026-06-20T08:00:00","category":"Macro Economy"},
+  {"id":"52","title":"Saham Perbankan Pimpin Penguatan","summary":"Saham sektor perbankan memimpin penguatan IHSG.","content":"Saham BBCA, BBRI, BMRI kompak menguat mendorong IHSG ke zona hijau.\n\nDisclaimer.","source":"CNBC Indonesia","url":"#","sentiment":"positive","relatedStocks":["BBCA","BBRI","BMRI"],"publishedAt":"2026-06-21T11:30:00","category":"Market News"},
+  {"id":"53","title":"HSBC Naikkan Target IHSG","summary":"HSBC menaikkan target IHSG menjadi 7800.","content":"HSBC menaikkan target IHSG didorong oleh prospek ekonomi Indonesia yang positif.\n\nDisclaimer.","source":"Bloomberg","url":"#","sentiment":"positive","relatedStocks":["BBCA","BBRI","BMRI","BYAN"],"publishedAt":"2026-06-19T09:00:00","category":"Macro Economy"},
+  {"id":"54","title":"Sektor Properti Menguat Signifikan","summary":"Saham properti menguat signifikan didorong insentif pemerintah.","content":"Saham PWON naik 4%, CTRA naik 3.5%, BSDE naik 2.8% setelah insentif properti diumumkan.\n\nDisclaimer.","source":"Bisnis Indonesia","url":"#","sentiment":"positive","relatedStocks":["PWON","CTRA","BSDE","LPKR"],"publishedAt":"2026-06-18T10:00:00","category":"Market News"},
+  {"id":"55","title":"Inflasi Terkendali, Rupiah Stabil","summary":"Inflasi terkendali di level 2.8%, rupiah stabil.","content":"Inflasi Indonesia tetap terkendali mendukung stabilitas nilai tukar rupiah.\n\nDisclaimer.","source":"NERV News","url":"#","sentiment":"positive","relatedStocks":["BBCA","BBRI","BMRI"],"publishedAt":"2026-06-21T08:30:00","category":"Macro Economy"},
 ];
 
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
   const sentiment = searchParams.get("sentiment");
   const stock = searchParams.get("stock");
-  const limit = parseInt(searchParams.get("limit") || "10");
+  const category = searchParams.get("category");
+  const search = searchParams.get("search");
+  const limit = parseInt(searchParams.get("limit") || "20");
 
   let filtered = [...dummyNews];
 
-  // Filter by sentiment
   if (sentiment && sentiment !== "all") {
     filtered = filtered.filter((n) => n.sentiment === sentiment);
   }
-
-  // Filter by related stock
   if (stock) {
-    const stockUpper = stock.toUpperCase();
-    filtered = filtered.filter((n) =>
-      n.relatedStocks.some((s) => s === stockUpper)
-    );
+    const s = stock.toUpperCase();
+    filtered = filtered.filter((n) => n.relatedStocks.some((rs: string) => rs === s));
+  }
+  if (category) {
+    filtered = filtered.filter((n) => n.category === category);
+  }
+  if (search) {
+    const q = search.toLowerCase();
+    filtered = filtered.filter((n) => n.title.toLowerCase().includes(q) || n.summary.toLowerCase().includes(q));
   }
 
-  // Limit
   filtered = filtered.slice(0, limit);
-
-  // Sort by date (newest first)
-  filtered.sort(
-    (a, b) =>
-      new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-  );
+  filtered.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
 
   return NextResponse.json(filtered);
 }
