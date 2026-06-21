@@ -9,6 +9,7 @@ import Sidebar from "@/components/Sidebar";
 import TickerTape from "@/components/TickerTape";
 import { formatNumber, formatPercent, formatVolume, formatCurrency, getChangeColor, cn } from "@/lib/utils";
 import { TrendingUp, TrendingDown, ChevronDown, ChevronUp, ChevronRight, BookmarkCheck, Search as SearchIcon, MessageSquare, Wallet, Activity, BarChart3, Star, X, ExternalLink, Globe, Newspaper, Loader2, GripHorizontal } from "lucide-react";
+import StockDetailModal from "@/components/StockDetailModal";
 
 // ============================================================
 // DATA
