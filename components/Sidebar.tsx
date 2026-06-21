@@ -20,11 +20,9 @@ import {
   Wallet,
   Activity,
   Brain,
-  Calculator,
-  Calendar,
   FileText,
   Menu,
-  FileText,
+  X,
 } from "lucide-react";
 
 const mainLinks = [
