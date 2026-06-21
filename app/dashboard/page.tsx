@@ -1,5 +1,10 @@
 "use client";
 
+// Dashboard harus di-render secara dinamis (tidak static generation)
+export const dynamic = "force-dynamic";
+
+export const fetchCache = "force-no-store";
+
 import { useState, useEffect, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
