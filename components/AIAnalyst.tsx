@@ -42,6 +42,7 @@ export default function AIAnalyst({ floating = false }: Props) {
     setIsLoading(true);
 
     try {
+      // Coba panggil API chat dulu
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -123,7 +124,7 @@ export default function AIAnalyst({ floating = false }: Props) {
         {
           role: "assistant",
           content:
-            "Maaf, terjadi kesalahan koneksi. Silakan periksa koneksi internet Anda dan coba lagi. Jika masalah berlanjut, pastikan GROQ_API_KEY sudah dikonfigurasi.",
+            "Maaf, fitur AI Analyst sedang dalam pengembangan. Silakan coba lagi nanti atau gunakan fitur analisis lainnya di dashboard.\n\nAnda masih bisa menggunakan:\n• 📊 **Chart interaktif** dengan TradingView\n• 📈 **Stock Screener** untuk filter saham\n• 🔍 **Signal Detector** untuk sinyal trading\n• 📰 **Insights & News** untuk berita pasar\n\nFitur chat akan segera hadir dengan kemampuan penuh!","]))
         },
       ]);
     } finally {
@@ -230,7 +231,7 @@ export default function AIAnalyst({ floating = false }: Props) {
           </button>
         </div>
         <p className="mt-1 text-[10px] text-text-muted italic">
-          *Bukan saran investasi. Selalu lakukan riset sendiri.
+          *Fitur chat masih dalam pengembangan. Jawaban akan bersifat informatif.
         </p>
       </form>
     </div>
