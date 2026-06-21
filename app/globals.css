@@ -186,3 +186,21 @@ input:-webkit-autofill:focus {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-surface-400);
 }
+
+/* ============================================================
+   PRINT STYLES - Research Report PDF
+   ============================================================ */
+@media print {
+  body { background: white !important; color: black !important; }
+  nav, .sidebar, .ticker-tape, .print\:hidden { display: none !important; }
+  main { padding: 0 !important; margin: 0 !important; max-width: 100% !important; }
+  .bg-surface, .bg-surface\/60, .bg-surface\/80, .bg-surface\/95 { background: white !important; }
+  .text-text-primary, .text-text-secondary, .text-text-muted { color: #333 !important; }
+  .text-primary-400 { color: #059669 !important; }
+  .text-gain, .text-green-400 { color: #16a34a !important; }
+  .text-loss, .text-red-400 { color: #dc2626 !important; }
+  .border-surface-200, .border-surface-300 { border-color: #e5e7eb !important; }
+  .bg-surface-100, .bg-surface-200 { background: #f9fafb !important; }
+  .rounded-xl, .rounded-lg { border-radius: 4px !important; }
+  @page { margin: 1.5cm; size: A4; }
+}

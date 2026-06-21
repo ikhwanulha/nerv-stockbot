@@ -101,9 +101,17 @@ export default function NewsPage() {
                       ))}
                     </div>
                     <h2 className="text-sm font-semibold text-text-primary leading-snug">{item.title}</h2>
-                    {!expandedId || expandedId !== item.id ? (
-                      <p className="text-xs text-text-secondary mt-1 line-clamp-2">{item.summary}</p>
-                    ) : null}
+                    <p className="text-xs text-text-secondary mt-1 line-clamp-2">{item.summary}</p>
+                    {/* Saham terkait */}
+                    {item.relatedStocks && item.relatedStocks.length > 0 && !expandedId && (
+                      <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
+                        <span className="text-[9px] text-text-muted">Terkait:</span>
+                        {item.relatedStocks.map((s: string) => (
+                          <button key={s} onClick={(e) => { e.stopPropagation(); setSelectedStock(s); }}
+                            className="text-[9px] px-1.5 py-0.5 rounded bg-surface-200 text-primary-400 font-mono hover:bg-surface-300 transition-colors">{s}</button>
+                        ))}
+                      </div>
+                    )}
                   </button>
 
                   {/* Expanded content */}

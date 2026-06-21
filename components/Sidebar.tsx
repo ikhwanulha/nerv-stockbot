@@ -36,6 +36,7 @@ const mainLinks = [
   { href: "/analytics", label: "Analytics", icon: Activity },
   { href: "/report", label: "Research Report", icon: FileText },
   { href: "/settings", label: "Settings", icon: PieChart },
+  { href: "/about", label: "About", icon: Brain },
 ];
 
 const sidebarSections = [

@@ -38,9 +38,9 @@ export default function Navbar() {
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
           className="p-2 rounded-lg hover:bg-surface-200 transition-colors text-text-secondary"
-          title={sidebarOpen ? "Sembunyikan sidebar" : "Tampilkan sidebar"}
+          title="Toggle sidebar"
         >
-          {sidebarOpen ? <X size={18} /> : <Menu size={18} />}
+          <Menu size={18} />
         </button>
 
         {/* Logo */}
