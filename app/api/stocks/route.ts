@@ -73,24 +73,6 @@ export async function GET(req: NextRequest) {
       // ============================================================
       case "indices": {
         const indices = getDummyIndices();
-        // Coba ambil data real dari Yahoo
-        try {
-          const { default: yahooFinance } = await import("yahoo-finance2");
-          const symbols = ["^JKSE", "^JKLQ45"];
-          const quotes = await yahooFinance.quote(symbols);
-          quotes.forEach((q: any) => {
-            if (q.symbol === "^JKSE") {
-              indices.ihsg.price = q.regularMarketPrice || indices.ihsg.price;
-              indices.ihsg.change = q.regularMarketChange || indices.ihsg.change;
-              indices.ihsg.changePercent = q.regularMarketChangePercent || indices.ihsg.changePercent;
-            }
-            if (q.symbol === "^JKLQ45") {
-              indices.lq45.price = q.regularMarketPrice || indices.lq45.price;
-              indices.lq45.change = q.regularMarketChange || indices.lq45.change;
-              indices.lq45.changePercent = q.regularMarketChangePercent || indices.lq45.changePercent;
-            }
-          });
-        } catch {}
         return NextResponse.json(indices);
       }
 
