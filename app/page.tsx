@@ -148,9 +148,9 @@ export default function LandingPage() {
                 <div className="flex items-center gap-1"><CheckCircle size={12} className="text-emerald-400" /> Tanpa Premium</div>
               </div>
             </div>
-            <div className="hidden md:block">
+            <div className="block">
               {/* Login Card */}
-              <div className="rounded-2xl border border-surface-200 bg-surface/80 p-6 backdrop-blur shadow-2xl">
+              <div className="rounded-2xl border border-surface-200 bg-surface/80 p-4 sm:p-6 backdrop-blur shadow-2xl">
                 <h2 className="text-lg font-bold text-center mb-4">Masuk ke Akun Anda</h2>
                 <form onSubmit={handleLogin} className="space-y-3">
                   <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="nama@email.com"

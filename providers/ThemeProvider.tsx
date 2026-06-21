@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { UserSettings } from "@/types";
 
-type Theme = "default" | "bloomberg" | "retro";
+type Theme = "default" | "bloomberg";
 
 interface ThemeContextType {
   theme: Theme;

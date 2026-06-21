@@ -24,6 +24,11 @@ export default function NewsPage() {
   const [selectedStock, setSelectedStock] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
+  const [page, setPage] = useState(0);
+  const PER_PAGE = 6;
+
+  const paginatedNews = news.slice(page * PER_PAGE, (page + 1) * PER_PAGE);
+  const totalPages = Math.ceil(news.length / PER_PAGE);
 
   const fetchNews = useCallback(async () => {
     try {
@@ -83,7 +88,7 @@ export default function NewsPage() {
             <div className="text-center py-12 text-text-muted"><Newspaper size={48} className="mx-auto mb-2 opacity-30" /><p className="text-sm">Tidak ada berita</p></div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {news.map((item: any) => (
+              {paginatedNews.map((item: any) => (
                 <div key={item.id} className="rounded-xl border border-surface-200 bg-surface/60 overflow-hidden hover:border-surface-300 transition-all">
                   {/* Clickable header */}
                   <button onClick={() => setExpandedId(expandedId === item.id ? null : item.id)}
@@ -136,6 +141,25 @@ export default function NewsPage() {
                   )}
                 </div>
               ))}
+            </div>
+          )}
+          {/* Pagination */}
+          {news.length > PER_PAGE && (
+            <div className="flex items-center justify-center gap-2 mt-4">
+              <button onClick={() => setPage(Math.max(0, page - 1))} disabled={page === 0}
+                className="px-3 py-1.5 text-xs rounded-lg bg-surface-100 hover:bg-surface-200 disabled:opacity-30 disabled:cursor-not-allowed border border-surface-200 text-text-primary transition-colors">
+                ‹ Sebelumnya
+              </button>
+              {Array.from({ length: totalPages }).map((_, i) => (
+                <button key={i} onClick={() => setPage(i)}
+                  className={`w-7 h-7 text-xs rounded-lg transition-colors ${
+                    page === i ? "bg-primary-600 text-white" : "bg-surface-100 text-text-muted hover:bg-surface-200"
+                  }`}>{i + 1}</button>
+              ))}
+              <button onClick={() => setPage(Math.min(totalPages - 1, page + 1))} disabled={page >= totalPages - 1}
+                className="px-3 py-1.5 text-xs rounded-lg bg-surface-100 hover:bg-surface-200 disabled:opacity-30 disabled:cursor-not-allowed border border-surface-200 text-text-primary transition-colors">
+                Selanjutnya ›
+              </button>
             </div>
           )}
         </main>

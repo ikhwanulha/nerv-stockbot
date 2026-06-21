@@ -1,25 +1,41 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Bell, BellDot, X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Bell, BellDot, X, ExternalLink } from "lucide-react";
+import { formatDate } from "@/lib/utils";
 
 export default function NotificationBell() {
+  const router = useRouter();
   const [showDropdown, setShowDropdown] = useState(false);
   const [notifications, setNotifications] = useState<any[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
 
-  // Generate notifications from signals
+  // Generate notifications from news + signals (auto-update)
   useEffect(() => {
-    const notifs = [
-      { id: "n1", title: "Sinyal BUY Baru: BBCA", desc: "Entry 9.850, SL 9.750, TP 10.150", time: "5 menit lalu", type: "signal", read: false },
-      { id: "n2", title: "Sinyal SELL Baru: GOTO", desc: "Entry 1.200, SL 1.150, TP 1.300", time: "15 menit lalu", type: "signal", read: false },
-      { id: "n3", title: "IHSG Menguat 0.85%", desc: "Net asing catat buy Rp 1.2T", time: "30 menit lalu", type: "market", read: false },
-      { id: "n4", title: "BBCA Cetak Laba Rp 45T", desc: "Laporan keuangan solid", time: "1 jam lalu", type: "news", read: true },
-      { id: "n5", title: "BMRI Target Price Rp 6.750", desc: "Analyst rekomendasi BUY", time: "2 jam lalu", type: "analyst", read: true },
-    ];
-    setNotifications(notifs);
-    setUnreadCount(notifs.filter(n => !n.read).length);
+    const generateNotifs = async () => {
+      try {
+        // Ambil berita terbaru untuk notifikasi
+        const res = await fetch("/api/news?limit=5");
+        const news = await res.json();
+        const notifs = news.map((n: any, i: number) => ({
+          id: `news-${n.id}`,
+          type: "news",
+          title: n.title,
+          desc: `${n.source} • ${n.relatedStocks?.slice(0, 3).join(", ") || "Umum"}`,
+          time: formatDate(n.publishedAt),
+          sentiment: n.sentiment,
+          link: `/news?highlight=${n.id}`,
+          read: i > 1, // 2 berita terbaru belum dibaca
+        }));
+        setNotifications(notifs);
+        setUnreadCount(notifs.filter((n: any) => !n.read).length);
+      } catch {}
+    };
+    generateNotifs();
+    const interval = setInterval(generateNotifs, 60000);
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -28,8 +44,16 @@ export default function NotificationBell() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  const markAllRead = () => {
-    setNotifications(n => n.map(n => ({ ...n, read: true })));
+  const handleClick = (notif: any) => {
+    // Tandai sudah dibaca
+    setNotifications(prev => prev.map(n => n.id === notif.id ? { ...n, read: true } : n));
+    setUnreadCount(prev => Math.max(0, prev - 1));
+    setShowDropdown(false);
+    if (notif.link) router.push(notif.link);
+  };
+
+  const clearRead = () => {
+    setNotifications(prev => prev.filter(n => !n.read));
     setUnreadCount(0);
   };
 
@@ -48,22 +72,44 @@ export default function NotificationBell() {
         <div className="absolute right-0 top-full mt-1 w-80 z-50 rounded-xl border border-surface-300 bg-surface shadow-2xl overflow-hidden animate-fade-in">
           <div className="p-3 border-b border-surface-200 flex items-center justify-between">
             <h3 className="text-xs font-semibold text-text-primary">Notifikasi</h3>
-            <button onClick={markAllRead} className="text-[10px] text-primary-400 hover:text-primary-300">Tandai dibaca</button>
+            <div className="flex items-center gap-2">
+              {notifications.some(n => !n.read) && (
+                <button onClick={clearRead} className="text-[10px] text-primary-400 hover:text-primary-300">Hapus dibaca</button>
+              )}
+            </div>
           </div>
-          <div className="max-h-[320px] overflow-y-auto divide-y divide-surface-200">
-            {notifications.map((n) => (
-              <div key={n.id} className={`p-3 hover:bg-surface-100/50 transition-colors ${!n.read ? "bg-primary-900/10" : ""}`}>
-                <div className="flex items-start gap-2">
-                  <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${!n.read ? "bg-primary-400" : "bg-transparent"}`} />
-                  <div className="flex-1 min-w-0">
-                    <p className={`text-xs ${!n.read ? "font-semibold text-text-primary" : "text-text-secondary"}`}>{n.title}</p>
-                    <p className="text-[10px] text-text-muted mt-0.5">{n.desc}</p>
+          <div className="max-h-[350px] overflow-y-auto divide-y divide-surface-200">
+            {notifications.length === 0 ? (
+              <div className="p-6 text-center text-text-muted text-xs">Belum ada notifikasi</div>
+            ) : (
+              notifications.map((n) => (
+                <button key={n.id} onClick={() => handleClick(n)}
+                  className={`w-full text-left p-3 hover:bg-surface-100/50 transition-colors ${!n.read ? "bg-primary-900/10" : ""}`}>
+                  <div className="flex items-start gap-2">
+                    <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${!n.read ? "bg-primary-400" : "bg-transparent"}`} />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5 mb-0.5">
+                        {n.sentiment && (
+                          <span className={`text-[9px] px-1 rounded ${
+                            n.sentiment === "positive" ? "bg-green-500/15 text-green-400" :
+                            n.sentiment === "negative" ? "bg-red-500/15 text-red-400" : "bg-yellow-500/15 text-yellow-400"
+                          }`}>{n.sentiment === "positive" ? "📈" : n.sentiment === "negative" ? "📉" : "⚖️"}</span>
+                        )}
+                        <span className="text-[9px] text-text-muted">{n.time}</span>
+                      </div>
+                      <p className={`text-xs leading-snug ${!n.read ? "font-semibold text-text-primary" : "text-text-secondary"}`}>{n.title}</p>
+                      <p className="text-[9px] text-text-muted mt-0.5">{n.desc}</p>
+                    </div>
                   </div>
-                  <span className="text-[9px] text-text-muted whitespace-nowrap">{n.time}</span>
-                </div>
-              </div>
-            ))}
+                </button>
+              ))
+            )}
           </div>
+          {notifications.length > 0 && (
+            <div className="p-2 border-t border-surface-200 text-center">
+              <button onClick={() => { setShowDropdown(false); router.push("/news"); }} className="text-[10px] text-primary-400 hover:text-primary-300">Lihat Semua Berita</button>
+            </div>
+          )}
         </div>
       )}
     </div>
