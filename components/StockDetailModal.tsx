@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { X, TrendingUp, TrendingDown, ExternalLink, Newspaper, BarChart3, FileText, Activity, DollarSign, PieChart, Building2, Calendar, Shield, Info } from "lucide-react";
 import { formatNumber, formatCurrency, formatPercent, formatVolume, getChangeColor, cn } from "@/lib/utils";
-import { TVSymbolChart } from "./TradingViewWidgets";
+import { TVAdvancedChart } from "@/components/TradingViewWidgets";
 
 // Logo URL helper
 function getStockLogo(symbol: string): string {
@@ -118,7 +118,7 @@ export default function StockDetailModal({ symbol, onClose }: Props) {
             <div className="space-y-4">
               {/* Chart */}
               <div className="rounded-xl border border-surface-200 bg-surface/50 overflow-hidden" style={{ height: 300 }}>
-                <TVSymbolChart symbol={`IDX:${symbol}`} height={300} />
+                <TVAdvancedChart symbol={`IDX:${symbol}`} height={300} />
               </div>
 
               {/* Key Stats Grid */}
@@ -255,7 +255,7 @@ export default function StockDetailModal({ symbol, onClose }: Props) {
           {activeTab === "technical" && (
             <div className="space-y-4">
               <div className="rounded-xl border border-surface-200 bg-surface/50 overflow-hidden" style={{ height: 400 }}>
-                <TVSymbolChart symbol={`IDX:${symbol}`} height={400} />
+                <TVAdvancedChart symbol={`IDX:${symbol}`} height={400} />
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {[
