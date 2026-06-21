@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 
 const mainLinks = [
+  { href: "/market", label: "Market", icon: BarChart3 },
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/screener", label: "Screener", icon: Search },
   { href: "/signals", label: "Signals", icon: Signal },
@@ -37,6 +38,7 @@ const sidebarSections = [
   {
     section: "Analisis",
     items: [
+      { href: "/market", label: "Market", icon: BarChart3 },
       { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
       { href: "/screener", label: "Stock Screener", icon: Search },
       { href: "/signals", label: "Signal Detector", icon: Signal },
