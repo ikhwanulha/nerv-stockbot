@@ -37,8 +37,8 @@ export default function LoginPage() {
       }
 
       toast.success("Login berhasil!");
-      router.push("/dashboard");
-      router.refresh();
+      // Force full page reload untuk refresh session
+      window.location.href = "/dashboard";
     } catch (error) {
       toast.error("Terjadi kesalahan. Silakan coba lagi.");
     } finally {
