@@ -20,7 +20,11 @@ import {
   Wallet,
   Activity,
   Brain,
+  Calculator,
+  Calendar,
+  FileText,
   Menu,
+  FileText,
 } from "lucide-react";
 
 const mainLinks = [
@@ -32,6 +36,7 @@ const mainLinks = [
   { href: "/watchlist", label: "Watchlist", icon: BookmarkCheck },
   { href: "/news", label: "News", icon: Newspaper },
   { href: "/analytics", label: "Analytics", icon: Activity },
+  { href: "/report", label: "Research Report", icon: FileText },
   { href: "/settings", label: "Settings", icon: PieChart },
 ];
 
@@ -74,18 +79,28 @@ const sidebarSections = [
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const { sidebarOpen } = useTheme();
+  const { sidebarOpen, setSidebarOpen } = useTheme();
 
   return (
     <>
       {/* Desktop Sidebar */}
       <aside
         className={cn(
-          "hidden lg:block h-[calc(100vh-3.5rem)] border-r border-surface-200 bg-surface/50 overflow-y-auto transition-all duration-300 flex-shrink-0",
+          "hidden lg:block h-[calc(100vh-3.5rem)] border-r border-surface-200 bg-surface/50 overflow-y-auto transition-all duration-300 flex-shrink-0 relative",
           sidebarOpen ? "w-56" : "w-0 overflow-hidden border-r-0"
         )}
       >
-        <div className={cn("p-3", !sidebarOpen && "hidden")}>
+        {/* Tombol close/x langsung di sidebar */}
+        {sidebarOpen && (
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="absolute top-1 right-1 z-10 p-1 rounded-lg hover:bg-surface-200 text-text-muted hover:text-text-primary transition-colors"
+            title="Tutup sidebar"
+          >
+            <X size={14} />
+          </button>
+        )}
+        <div className={cn("p-3 pt-8", !sidebarOpen && "hidden")}>
           {sidebarSections.map((section) => (
             <div key={section.section}>
               <p className="px-3 py-2 text-[10px] uppercase tracking-widest text-text-muted font-semibold">

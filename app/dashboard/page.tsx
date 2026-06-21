@@ -9,6 +9,7 @@ import Sidebar from "@/components/Sidebar";
 import TickerTape from "@/components/TickerTape";
 import { formatNumber, formatPercent, formatVolume, formatCurrency, getChangeColor, cn } from "@/lib/utils";
 import { TrendingUp, TrendingDown, ChevronDown, ChevronUp, ChevronRight, BookmarkCheck, Search as SearchIcon, MessageSquare, Wallet, Activity, BarChart3, Star, X, ExternalLink, Globe, Newspaper, Loader2, GripHorizontal } from "lucide-react";
+import Link from "next/link";
 import StockDetailModal from "@/components/StockDetailModal";
 
 // ============================================================
@@ -337,7 +338,7 @@ function DashboardContent() {
                     </div>
                   ))}
                 </div>
-                <button className="mt-2 text-[10px] text-primary-400 hover:text-primary-300 flex items-center gap-1">Selengkapnya <ChevronRight size={10} /></button>
+                <Link href="/analysis" className="mt-2 text-[10px] text-primary-400 hover:text-primary-300 flex items-center gap-1">Selengkapnya <ChevronRight size={10} /></Link>
               </CollapsiblePanel>
 
               {/* PANEL 4: Sektor */}
@@ -386,7 +387,7 @@ function DashboardContent() {
                     </button>
                   ))}
                 </div>
-                <button className="mt-2 text-[10px] text-primary-400 hover:text-primary-300 flex items-center gap-1">Selengkapnya <ChevronRight size={10} /></button>
+                <Link href="/analysis" className="mt-2 text-[10px] text-primary-400 hover:text-primary-300 flex items-center gap-1">Selengkapnya <ChevronRight size={10} /></Link>
               </CollapsiblePanel>
 
               {/* PANEL 6: Unboxing Saham */}

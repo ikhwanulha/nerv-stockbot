@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 import TickerTape from "@/components/TickerTape";
@@ -125,7 +126,7 @@ function MoversSection() {
   };
 
   return (
-    <SectionCard title="Pergerakan Saham" action="Selengkapnya >">
+    <SectionCard title="Pergerakan Saham" action="">
       <div className="flex gap-1 overflow-x-auto pb-2 mb-2 scrollbar-none">
         {tabs.map((t) => (
           <button key={t.key} onClick={() => setTab(t.key)}
@@ -156,24 +157,26 @@ function MoversSection() {
   );
 }
 
-function SectionCard({ title, action, children, className }: { title: string; action?: string; children: React.ReactNode; className?: string }) {
+function SectionCard({ title, action, children, className, actionHref }: { title: string; action?: string; children: React.ReactNode; className?: string; actionHref?: string }) {
+  const router = useRouter();
   return (
     <div className={cn("rounded-xl border border-surface-200 bg-surface/60 p-3", className)}>
       <div className="flex items-center justify-between mb-2">
         <h2 className="text-xs font-semibold text-text-primary">{title}</h2>
-        {action && <button className="text-[10px] text-primary-400 hover:text-primary-300 flex items-center gap-0.5">{action} <ChevronRight size={10} /></button>}
+        {action && <button onClick={() => actionHref && router.push(actionHref)} className="text-[10px] text-primary-400 hover:text-primary-300 flex items-center gap-0.5">{action} <ChevronRight size={10} /></button>}
       </div>
       {children}
     </div>
   );
 }
 
-function SectionCardFull({ title, action, children, className, id }: { title: string; action?: string; children: React.ReactNode; className?: string; id?: string }) {
+function SectionCardFull({ title, action, children, className, id, actionHref }: { title: string; action?: string; children: React.ReactNode; className?: string; id?: string; actionHref?: string }) {
+  const router = useRouter();
   return (
     <section id={id} className={cn("rounded-xl border border-surface-200 bg-surface/60 overflow-hidden", className)}>
       <div className="flex items-center justify-between p-3 border-b border-surface-200">
         <h2 className="text-sm font-bold text-text-primary">{title}</h2>
-        {action && <button className="text-xs text-primary-400 hover:text-primary-300 flex items-center gap-1">{action} <ChevronRight size={12} /></button>}
+        {action && <button onClick={() => actionHref && router.push(actionHref)} className="text-xs text-primary-400 hover:text-primary-300 flex items-center gap-1">{action} <ChevronRight size={12} /></button>}
       </div>
       <div className="p-3">{children}</div>
     </section>
@@ -277,7 +280,7 @@ export default function MarketPage() {
               {/* ============================================================ */}
               {/* SEKTOR */}
               {/* ============================================================ */}
-              <SectionCard title="Sektor" action="Selengkapnya >">
+              <SectionCard title="Sektor" action="">
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-1.5">
                   {allSectors.map((s) => (
                     <div key={s.name} className={cn("flex items-center justify-between p-2 rounded-lg text-xs font-medium transition-colors", s.changePercent >= 0 ? "bg-green-500/5" : "bg-red-500/5")}>
@@ -298,7 +301,7 @@ export default function MarketPage() {
               {/* ============================================================ */}
               {/* UNBOXING SAHAM */}
               {/* ============================================================ */}
-              <SectionCard title="Unboxing Saham" action="Selengkapnya >">
+              <SectionCard title="Unboxing Saham" action="">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                   {UNBOXING.map((item) => (
                     <button key={item.symbol} onClick={() => setSelectedStock(item.symbol)}

@@ -17,7 +17,7 @@ const themeOptions = [
 
 export default function SettingsPage() {
   const { data: session } = useSession();
-  const { theme, setTheme, fontSize, setFontSize, tickerEnabled, setTickerEnabled, sidebarOpen, setSidebarOpen } = useTheme();
+  const { theme, setTheme, fontSize, setFontSize, tickerEnabled, setTickerEnabled } = useTheme();
   const [saving, setSaving] = useState(false);
 
   const saveSettings = async () => {
@@ -145,18 +145,7 @@ export default function SettingsPage() {
                   <div className={`absolute w-5 h-5 rounded-full bg-white top-0.5 transition-transform ${tickerEnabled ? "translate-x-5.5" : "translate-x-0.5"}`} style={{ transform: tickerEnabled ? "translateX(22px)" : "translateX(2px)" }} />
                 </button>
               </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-text-primary">Sidebar</p>
-                  <p className="text-xs text-text-muted">Tampilkan sidebar navigasi</p>
-                </div>
-                <button
-                  onClick={() => setSidebarOpen(!sidebarOpen)}
-                  className={`relative w-11 h-6 rounded-full transition-colors ${sidebarOpen ? "bg-primary-600" : "bg-surface-300"}`}
-                >
-                  <div className={`absolute w-5 h-5 rounded-full bg-white top-0.5 transition-transform ${sidebarOpen ? "translate-x-5.5" : "translate-x-0.5"}`} style={{ transform: sidebarOpen ? "translateX(22px)" : "translateX(2px)" }} />
-                </button>
-              </div>
+
             </div>
           </section>
 
