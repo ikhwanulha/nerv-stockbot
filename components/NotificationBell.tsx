@@ -2,8 +2,6 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Bell, BellDot, X } from "lucide-react";
-import { SIGNALS } from "@/app/signals/page";
-import { formatNumber } from "@/lib/utils";
 
 export default function NotificationBell() {
   const [showDropdown, setShowDropdown] = useState(false);
