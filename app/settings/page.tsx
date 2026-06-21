@@ -27,7 +27,7 @@ export default function SettingsPage() {
       await fetch("/api/user-settings", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ theme, fontSize, tickerEnabled, sidebarOpen }),
+        body: JSON.stringify({ theme, fontSize, tickerEnabled }),
       });
       toast.success("Pengaturan disimpan");
     } catch {
