@@ -67,7 +67,7 @@ const PAIR_TRADES = [
   { pair: "ADRO / ITMG", ratio: 1.12, zscore: 1.5, entry: "Long ITMG, Short ADRO", sl: "Ratio > 1.20", tp: "Ratio < 1.05", conf: 70 },
 ];
 
-function SignalCard({ title, data, timeframe }: { title: string; data: typeof SIGNALS.ihsg.daily; timeframe: string }) {
+function SignalCard({ title, data, timeframe }: { title: string; data: typeof SIGNALS.ihsg.daily | typeof SIGNALS.ihsg.h4; timeframe: string }) {
   const colors = {
     BUY: { bg: "bg-green-500/10 border-green-500/30 text-green-400", text: "BUY ▲" },
     SELL: { bg: "bg-red-500/10 border-red-500/30 text-red-400", text: "SELL ▼" },
