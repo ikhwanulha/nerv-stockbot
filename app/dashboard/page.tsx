@@ -1,11 +1,6 @@
 "use client";
 
-// Dashboard harus di-render secara dinamis (tidak static generation)
-export const dynamic = "force-dynamic";
-
-export const fetchCache = "force-no-store";
-
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, Suspense } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTheme } from "@/providers/ThemeProvider";
@@ -330,7 +325,7 @@ const WIDGET_LAYOUTS = [
 // ============================================================
 // DASHBOARD PAGE
 // ============================================================
-export default function DashboardPage() {
+function DashboardContent() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -466,5 +461,20 @@ export default function DashboardPage() {
         />
       )}
     </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-surface flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-10 h-10 border-2 border-primary-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+          <p className="text-sm text-text-muted">Memuat dashboard...</p>
+        </div>
+      </div>
+    }>
+      <DashboardContent />
+    </Suspense>
   );
 }
