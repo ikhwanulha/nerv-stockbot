@@ -1,0 +1,135 @@
+// Prisma schema untuk NERV StockBot
+// Database: PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================
+// USER & AUTENTIKASI
+// ============================================================
+
+model User {
+  id              String   @id @default(cuid())
+  email           String   @unique
+  password        String
+  name            String?
+  resetToken      String?  @unique
+  resetTokenExpiry DateTime?
+
+  // Preferensi bisa disimpan di UserSetting
+  settings    UserSetting?
+  watchlists  Watchlist[]
+  portfolios  Portfolio[]
+  transactions Transaction[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserSetting {
+  id              String  @id @default(cuid())
+  userId          String  @unique
+  user            User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  theme           String  @default("default") // default, bloomberg, retro
+  fontSize        String  @default("medium")  // small, medium, large
+  tickerEnabled   Boolean @default(true)
+  sidebarOpen     Boolean @default(true)
+  layout          Json?   // Menyimpan layout widget dashboard (react-grid-layout)
+  enabledWidgets  Json?   // Widget apa saja yang aktif
+  widgetOrder     Json?   // Urutan widget
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ============================================================
+// WATCHLIST
+// ============================================================
+
+model Watchlist {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String   @default("Watchlist Saya")
+  stocks    WatchlistStock[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model WatchlistStock {
+  id          String   @id @default(cuid())
+  watchlistId String
+  watchlist   Watchlist @relation(fields: [watchlistId], references: [id], onDelete: Cascade)
+  symbol      String   // Kode saham, misal: BBCA, BBRI
+  addedAt     DateTime @default(now())
+
+  @@unique([watchlistId, symbol])
+}
+
+// ============================================================
+// PORTOFOLIO VIRTUAL
+// ============================================================
+
+model Portfolio {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String   @default("Portfolio Utama")
+  cash      Float    @default(100000000) // Saldo awal 100 juta
+  holdings  Holding[]
+  transactions Transaction[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Holding {
+  id          String @id @default(cuid())
+  portfolioId String
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  symbol      String
+  shares      Int    @default(0)
+  avgPrice    Float  @default(0)
+
+  @@unique([portfolioId, symbol])
+}
+
+model Transaction {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  portfolioId String?
+  portfolio   Portfolio? @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  symbol      String
+  type        String   // BUY or SELL
+  shares      Int
+  price       Float
+  total       Float
+  date        DateTime @default(now())
+
+  createdAt DateTime @default(now())
+}
+
+// ============================================================
+// ALERTS / NOTIFIKASI
+// ============================================================
+
+model Alert {
+  id        String   @id @default(cuid())
+  userId    String
+  symbol    String
+  type      String   // price_above, price_below, volume, indicator
+  value     Float
+  active    Boolean  @default(true)
+  triggered Boolean  @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

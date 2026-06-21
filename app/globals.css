@@ -1,0 +1,227 @@
+/* NERV StockBot - Global Styles */
+/* Multi-theme support via CSS variables */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Press+Start+2P&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   CSS VARIABLES & THEME - DEFAULT (EMERALD / DARK)
+   ============================================================ */
+:root {
+  --color-primary-50: #ecfdf5;
+  --color-primary-100: #d1fae5;
+  --color-primary-200: #a7f3d0;
+  --color-primary-300: #6ee7b7;
+  --color-primary-400: #34d399;
+  --color-primary-500: #10b981;
+  --color-primary-600: #059669;
+  --color-primary-700: #047857;
+  --color-primary-800: #065f46;
+  --color-primary-900: #064e3b;
+  --color-primary-950: #022c22;
+
+  --color-surface: #0a0a0f;
+  --color-surface-50: #0f0f1a;
+  --color-surface-100: #14141f;
+  --color-surface-200: #1a1a2e;
+  --color-surface-300: #252540;
+  --color-surface-400: #3a3a5c;
+  --color-surface-500: #4f4f7a;
+
+  --color-accent: #10b981;
+  --color-accent-hover: #059669;
+
+  --color-text-primary: #e5e7eb;
+  --color-text-secondary: #9ca3af;
+  --color-text-muted: #6b7280;
+
+  --color-border: #1f2937;
+
+  --color-gain: #22c55e;
+  --color-gain-bg: rgba(34, 197, 94, 0.1);
+  --color-loss: #ef4444;
+  --color-loss-bg: rgba(239, 68, 68, 0.1);
+}
+
+/* ============================================================
+   THEME: BLOOMBERG (Biru Tua / Kuning)
+   ============================================================ */
+.theme-bloomberg {
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-200: #bfdbfe;
+  --color-primary-300: #93c5fd;
+  --color-primary-400: #60a5fa;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #2563eb;
+  --color-primary-700: #1d4ed8;
+  --color-primary-800: #1e40af;
+  --color-primary-900: #1e3a5f;
+  --color-primary-950: #0d1b2a;
+
+  --color-surface: #0a1425;
+  --color-surface-50: #0f1a30;
+  --color-surface-100: #14203b;
+  --color-surface-200: #1a2a4a;
+  --color-surface-300: #25385e;
+  --color-surface-400: #3a507a;
+
+  --color-accent: #eab308;
+  --color-accent-hover: #ca8a04;
+
+  --color-text-primary: #f0e6d0;
+  --color-text-secondary: #a09070;
+  --color-text-muted: #706040;
+}
+
+/* ============================================================
+   THEME: RETRO 8-BIT
+   ============================================================ */
+.theme-retro {
+  --color-primary-50: #f0fdf4;
+  --color-primary-100: #dcfce7;
+  --color-primary-200: #bbf7d0;
+  --color-primary-300: #86efac;
+  --color-primary-400: #4ade80;
+  --color-primary-500: #22c55e;
+  --color-primary-600: #16a34a;
+  --color-primary-700: #15803d;
+  --color-primary-800: #166534;
+  --color-primary-900: #14532d;
+  --color-primary-950: #052e16;
+
+  --color-surface: #1a0a2e;
+  --color-surface-50: #241040;
+  --color-surface-100: #2d1550;
+  --color-surface-200: #3a1d66;
+  --color-surface-300: #4a2580;
+  --color-surface-400: #5e309a;
+
+  --color-accent: #22c55e;
+  --color-accent-hover: #16a34a;
+
+  --color-text-primary: #00ff41;
+  --color-text-secondary: #00cc33;
+  --color-text-muted: #009926;
+
+  --color-border: #00ff41;
+  --color-gain: #00ff41;
+  --color-loss: #ff0044;
+}
+
+/* Retro theme specific overrides */
+.theme-retro body,
+.theme-retro .theme-retro-override {
+  font-family: "Press Start 2P", monospace !important;
+}
+
+.theme-retro * {
+  border-width: 2px !important;
+}
+
+.theme-retro button,
+.theme-retro .btn {
+  border: 3px solid #00ff41 !important;
+  border-radius: 0 !important;
+  box-shadow: 4px 4px 0px #00ff4177 !important;
+  text-transform: uppercase !important;
+}
+
+.theme-retro input,
+.theme-retro textarea,
+.theme-retro select {
+  border: 3px solid #00ff41 !important;
+  border-radius: 0 !important;
+  background: #0a0a1a !important;
+  color: #00ff41 !important;
+}
+
+.theme-retro .rounded-lg,
+.theme-retro .rounded-xl,
+.theme-retro .rounded-2xl {
+  border-radius: 0 !important;
+}
+
+/* ============================================================
+   FONT SIZE SYSTEM
+   ============================================================ */
+html.text-sm {
+  font-size: 14px;
+}
+
+html.text-base {
+  font-size: 16px;
+}
+
+html.text-lg {
+  font-size: 18px;
+}
+
+/* ============================================================
+   BASE STYLES
+   ============================================================ */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Inter", system-ui, sans-serif;
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-surface-50);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-surface-300);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-surface-400);
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes ticker {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* ============================================================
+   SELECTION
+   ============================================================ */
+::selection {
+  background-color: rgba(16, 185, 129, 0.3);
+  color: var(--color-text-primary);
+}
+
+/* ============================================================
+   INPUT AUTO-FILL OVERRIDE
+   ============================================================ */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px var(--color-surface-100) inset !important;
+  -webkit-text-fill-color: var(--color-text-primary) !important;
+}
