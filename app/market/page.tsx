@@ -245,10 +245,10 @@ export default function MarketPage() {
                       { label: "Open", value: formatNumber(MAIN_INDICES[0].open, 2) },
                       { label: "High", value: formatNumber(MAIN_INDICES[0].high, 2) },
                       { label: "Low", value: formatNumber(MAIN_INDICES[0].low, 2) },
-                      { label: "Lot Regular", value: formatVolume(MAIN_INDICES[0].lots.regular) },
-                      { label: "Lot All", value: formatVolume(MAIN_INDICES[0].lots.all) },
-                      { label: "Value", value: formatCurrency(MAIN_INDICES[0].value) },
-                      { label: "Freq", value: formatVolume(MAIN_INDICES[0].freq) },
+                      { label: "Lot Regular", value: MAIN_INDICES[0].lots ? formatVolume(MAIN_INDICES[0].lots.regular) : "-" },
+                      { label: "Lot All", value: MAIN_INDICES[0].lots ? formatVolume(MAIN_INDICES[0].lots.all) : "-" },
+                      { label: "Value", value: formatCurrency(MAIN_INDICES[0].value || 0) },
+                      { label: "Freq", value: formatVolume(MAIN_INDICES[0].freq || 0) },
                     ].map((item) => (
                       <div key={item.label} className="bg-surface-100 rounded-lg p-2 text-center">
                         <p className="text-[9px] text-text-muted">{item.label}</p>
